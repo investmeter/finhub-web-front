@@ -18,7 +18,7 @@ export default function Layout({children}) {
     }
 
     return (
-        <div>
+        <>
         <Head>
             <title>Next.js-bootstrap test app</title>
             <link rel="icon" href="/favicon.ico"/>
@@ -29,7 +29,13 @@ export default function Layout({children}) {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <Nav.Link  onClick= {function (e){e.preventDefault(); router.push('/')}} href="/">Home</Nav.Link>
-                    <Nav.Link  onClick={(e) => {e.preventDefault();router.push('/portfolio')}} href="/portfolio">Portfolio</Nav.Link>
+                    {/*<Nav.Link  onClick={(e) => {e.preventDefault();router.push('/portfolio')}} href="/portfolio">Portfolio</Nav.Link>*/}
+
+                    <Link href="/portfolio" passHref>
+                        <Nav.Link as="a"  >Portfolio</Nav.Link>
+                    </Link>
+
+
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -76,7 +82,7 @@ export default function Layout({children}) {
             {/*    </Row>*/}
             {/*</Container>*/}
 
-        </div>
+        </>
 )
 }
 
