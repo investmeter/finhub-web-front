@@ -3,7 +3,7 @@ import Head from 'next/head'
 import {Navbar, Nav, NavDropdown} from "react-bootstrap";
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Toast from 'react-bootstrap/Toast';
-import Container from 'react-bootstrap/Container';
+import {Container, Row, Col} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 import react, {useState} from 'react';
@@ -18,17 +18,26 @@ export default function Home() {
     return (
         <Layout>
 
-            <Jumbotron fluid>
+            <Jumbotron  className='bg-white'>
                 <Container>
-                    <h1 className="header">Welcome To React-Bootstrap</h1>
+                    <h1 className="header">Welcome To FinHub</h1>
                     <p>
-                        This is a simple hero unit, a simple jumbotron-style component for calling
-                        extra attention to featured content or information.
+                        The ultimate financial tools and info collection.
                     </p>
                 </Container>
             </Jumbotron>
 
-            <div>
+            <Container>
+                <Row className="justify-content-center">
+                    <Col md="auto">
+                        Fill in Portfolio
+                    </Col>
+                </Row>
+            </Container>
+
+            <Container fluid className="bg-dark text-white">
+                <Row>
+
                 {!session && <>
                     Not signed in <br/>
                     <button onClick={signIn}>Sign in</button>
@@ -37,7 +46,8 @@ export default function Home() {
                     Signed in as {session.user.email} <br/>
                     {/*<button onClick={signOut}>Sign out</button>*/}
                 </>}
-            </div>
+                </Row>
+            </Container>
 
         </Layout>
     )

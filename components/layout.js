@@ -1,10 +1,17 @@
 import Head from "next/head";
-import {Nav, Navbar, NavDropdown, Button} from "react-bootstrap";
+import Link from "next/link";
+import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
 import {signIn, signOut, useSession, getSession} from 'next-auth/client'
+
+import { useRouter } from 'next/router'
+
 
 export default function Layout({children}) {
 
+    const noBulletsList= {listStyleType: "none"};
+
     const [session, loading] = useSession();
+    const router = useRouter();
 
     const signOutRedirect = () => {
         signOut({ callbackUrl: '/'});
@@ -15,14 +22,14 @@ export default function Layout({children}) {
         <Head>
             <title>Next.js-bootstrap test app</title>
             <link rel="icon" href="/favicon.ico"/>
-            </Head>
-        <Navbar variant="dark" bg="dark">
-            <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        </Head>
+        <Navbar variant="dark" bg="primary">
+            <Navbar.Brand href="#home">FinHub</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href="#home">Home</Nav.Link>
-                    <Nav.Link href="#link">Link</Nav.Link>
+                    <Nav.Link  onClick= {function (e){e.preventDefault(); router.push('/')}} href="/">Home</Nav.Link>
+                    <Nav.Link  onClick={(e) => {e.preventDefault();router.push('/portfolio')}} href="/portfolio">Portfolio</Nav.Link>
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -54,6 +61,20 @@ export default function Layout({children}) {
         <main>
             {children}
         </main>
+
+            {/*<Container fluid className='bg-dark'>*/}
+            {/*    <Row>*/}
+            {/*        <Col className='text-white' >*/}
+            {/*            <ul style={noBulletsList}>*/}
+            {/*                <li>About</li>*/}
+            {/*                <li>About</li>*/}
+            {/*                <li>About</li>*/}
+            {/*            </ul>*/}
+
+            {/*        </Col>*/}
+
+            {/*    </Row>*/}
+            {/*</Container>*/}
 
         </div>
 )
