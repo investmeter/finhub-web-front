@@ -11,6 +11,7 @@ import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
 
+
 export default function Home() {
     const [session, loading] = useSession();
     console.log(session);
@@ -33,6 +34,7 @@ export default function Home() {
                         Fill in Portfolio
                     </Col>
                 </Row>
+
             </Container>
 
             <Container fluid className="bg-dark text-white">

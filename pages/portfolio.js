@@ -7,9 +7,13 @@ import react, {useState} from 'react';
 import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
-import { Typeahead } from 'react-bootstrap-typeahead';
+import {Typeahead} from 'react-bootstrap-typeahead';
+import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 
-
+const client = new ApolloClient({
+    uri: 'http://localhost:1337/graphql',
+    cache: new InMemoryCache()
+});
 
 function PortfolioAdd({assets}) {
     const [session, loading] = useSession();
@@ -38,12 +42,12 @@ function PortfolioAdd({assets}) {
 
                         <Typeahead
                             id='asset-id'
-                            highlightOnlyResult = {true}
+                            highlightOnlyResult={true}
                             onChange={(selected) => {
                                 // Handle selections...
                             }}
                             options={assets}
-                            labelKey= { option => `${option.ticker} ${option.company}`}
+                            labelKey={option => `${option.ticker} ${option.company}`}
                             placeholder="Type ticker or company name"
                             clearButton>
                         </Typeahead>
@@ -61,17 +65,35 @@ function PortfolioAdd({assets}) {
 PortfolioAdd.getInitialProps = async (ctx) => {
     const assets = [
         {
-            ticker:"AAPL",
-            company:"Apple",
+            ticker: "AAPL",
+            company: "Apple",
         },
         {
-            ticker:"GOOGL",
+            ticker: "GOOGL",
             company: "Alphabet (Google)"
         }
-        ]
+    ]
+
+    var res;
+
+    client
+        .query({
+            query: gql`
+                query {
+                    securities (limit: 1000){
+                        title
+                        ticker
+                      }
+                }`
+        })
+        .then(result => {
+            console.log(result);
+            res = result;
+        });
+
+
     return {assets}
 }
-
 
 
 export default PortfolioAdd
