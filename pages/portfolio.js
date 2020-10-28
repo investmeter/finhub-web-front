@@ -69,7 +69,7 @@ export const  getStaticProps = async (ctx) => {
 
     res = await client.query({
         query: gql`query {
-                    securities (limit: 1000){
+                    securities (limit: 10){
                         company: title
                         ticker
                       }
