@@ -10,10 +10,7 @@ import {signIn, signOut, useSession} from 'next-auth/client'
 import {Typeahead} from 'react-bootstrap-typeahead';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 
-const client = new ApolloClient({
-    uri: 'http://localhost:1337/graphql',
-    cache: new InMemoryCache()
-});
+import { initializeApollo } from '../lib/apolloClient'
 
 function PortfolioAdd({assets}) {
     const [session, loading] = useSession();
@@ -62,38 +59,33 @@ function PortfolioAdd({assets}) {
     )
 }
 
-PortfolioAdd.getInitialProps = async (ctx) => {
-    const assets = [
-        {
-            ticker: "AAPL",
-            company: "Apple",
-        },
-        {
-            ticker: "GOOGL",
-            company: "Alphabet (Google)"
-        }
-    ]
+export const  getStaticProps = async (ctx) => {
 
-    var res;
+    const client = initializeApollo()
 
-    client
-        .query({
-            query: gql`
-                query {
+    let res;
+
+    console.log("Fetching...")
+
+    res = await client.query({
+        query: gql`query {
                     securities (limit: 1000){
-                        title
+                        company: title
                         ticker
                       }
                 }`
-        })
-        .then(result => {
-            console.log(result);
-            res = result;
         });
 
 
-    return {assets}
-}
+    return {
+        props:
+            {
+                assets: res.data.securities,
+                initialApolloState: client.cache.extract()
+            }
+            //, revalidate: 1
+    }
 
+}
 
 export default PortfolioAdd
