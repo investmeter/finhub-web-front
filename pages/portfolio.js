@@ -7,11 +7,51 @@ import react, {useState} from 'react';
 import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
-import {Typeahead} from 'react-bootstrap-typeahead';
+import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 
 import { initializeApollo } from '../lib/apolloClient'
 
+let AsyncTypeHead = withAsync(Typeahead)
+
+const SecuritiesSearchTypeHead= (props) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState(props.options);
+
+    // if (props.options !== undefined) {
+    //     setOptions(props.options)
+    // }
+
+
+    const handleSearch =(query) => {
+        setIsLoading(true);
+
+        const client = initializeApollo()
+
+        client.query({
+            query: gql`query securities($query:String){
+                        securities (where: {_or:[{ticker_contains: $query},{title_contains:$query}]}) {
+                        company:title
+                        ticker
+                      }
+        }`,
+            variables: {
+                query:query
+            }
+        }).then(
+            (res) => {
+                setOptions(res.data.securities)
+                setIsLoading(false)
+            }
+        )
+        }
+
+        return (
+            <AsyncTypeHead {...props} options={options} onSearch={handleSearch} isLoading={isLoading}>
+            </AsyncTypeHead>
+        )
+
+}
 function PortfolioAdd({assets}) {
     const [session, loading] = useSession();
     console.log(session);
@@ -37,7 +77,7 @@ function PortfolioAdd({assets}) {
                     <Form.Group controlId="formAssetId">
                         <Form.Label>Instrument</Form.Label>
 
-                        <Typeahead
+                        <SecuritiesSearchTypeHead
                             id='asset-id'
                             highlightOnlyResult={true}
                             onChange={(selected) => {
@@ -46,8 +86,11 @@ function PortfolioAdd({assets}) {
                             options={assets}
                             labelKey={option => `${option.ticker} ${option.company}`}
                             placeholder="Type ticker or company name"
-                            clearButton>
-                        </Typeahead>
+                            clearButton
+                            defaultOpen={true}
+
+                        >
+                        </SecuritiesSearchTypeHead>
 
                     </Form.Group>
 
