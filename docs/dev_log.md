@@ -7,7 +7,12 @@ Implement next.js and apollo client example https://github.com/vercel/next.js/tr
 - (done) fetch dynamically assets when typing in:
     - use async Typehead https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/API.md#asynctypeahead
 - display prefetched first 10 assets when set focus and there is no typed search request
+- set up graph ql server for front-end https://www.apollographql.com/docs/apollo-server/ 
+- save portfolio
+- portfolio value - current and historical value 
  
+... 
+- use radis or smth for data exchange between services   
     
    
 
