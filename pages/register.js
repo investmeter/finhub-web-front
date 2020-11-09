@@ -11,59 +11,53 @@ import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
 
-import { Formik } from 'formik';
+import { useForm, Controller } from "react-hook-form";
 import * as yup from 'yup';
 
 const schema = yup.object({
-    userName: yup.string().required(),
+    userName: yup.string().required().min(1),
     password: yup.string().required(),
     repeatPassword: yup.string().required(),
 
 });
 
+const onSubmit = data => console.log(data);
 
 export default function Register() {
 
 
     const [session, loading] = useSession();
+
+    const { control, handleSubmit, watch, errors, formState } = useForm({
+        mode:"onChange"
+    });
+
+
     console.log(session);
 
     return (
         <Layout>
             <Container>
                 <h1>Register</h1>
-                <Formik
-                    validationSchema={schema}
-                    onSubmit={console.log}
-                    initialValues={{}}
-                >
-                    {({
-                          handleSubmit,
-                          handleChange,
-                          handleBlur,
-                          values,
-                          touched,
-                          isValid,
-                          errors,
-                      }) => (
-                        <Form onSubmit={handleSubmit} noValidate>
+
+                        <Form onSubmit={handleSubmit(onSubmit)} >
                             <Form.Group >
                                 <Form.Label>User name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter user name"
-                                    name="userName"
-                                    value={values.userName}
-                                    onChange={handleChange}
-                                    isInvalid={!!errors.userName}
-                                    isValid={!errors.userName}
-
+                                <Controller as={Form.Control}
+                                            placeholder="Enter user name"
+                                            name="userName"
+                                            control={control}
+                                            rules={ {required: true} }
+                                            defaultValue=""
+                                            isValid = {formState.dirtyFields.userName && !errors.userName}
+                                            isInvalid = {errors.userName}
+                                            cntx={formState}
                                 />
                                 <Form.Text className="text-muted">
                                     Unique username to identify yourself
                                 </Form.Text>
                                 <Form.Control.Feedback type="invalid">
-                                    {errors.userName}
+                                    {errors.userName && <span>Errors!!</span>}
                                 </Form.Control.Feedback>
 
                             </Form.Group>
@@ -74,10 +68,6 @@ export default function Register() {
                                     type="password"
                                     placeholder="Password"
                                     name="password"
-                                    value={values.password}
-                                    onChange={handleChange}
-                                    isValid={touched.password && !errors.password}
-
                                 />
 
                             </Form.Group>
@@ -88,9 +78,6 @@ export default function Register() {
                                     type="password"
                                     placeholder="Repeat password"
                                     name="repeatPassword"
-                                    value={values.repeatPassword}
-                                    onChange={handleChange}
-                                    isValid={touched.repeatPassword && !errors.repeatPassword}
                                 />
 
                             </Form.Group>
@@ -99,9 +86,6 @@ export default function Register() {
                                 Submit
                             </Button>
                         </Form>
-                        )}
-
-                </Formik>
 
 
             </Container>

@@ -22,7 +22,9 @@ https://react-bootstrap.github.io/components/forms/#forms-validation-native
 With Formik https://formik.org/docs/overview 
 
 Schema management for Formik https://github.com/jquense/yup   
-    
+
+check http://jquense.github.io/react-formal/getting-started
+https://react-hook-form.com/get-started#Quickstart
    
  
    
