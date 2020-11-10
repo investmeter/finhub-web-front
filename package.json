@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.5",
+    "@hookform/resolvers": "^1.0.1",
     "bootstrap": "^4.5.2",
     "formik": "^2.2.2",
     "graphql": "^15.4.0",
