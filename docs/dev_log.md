@@ -28,9 +28,9 @@ check http://jquense.github.io/react-formal/getting-started
 https://react-hook-form.com/get-started#Quickstart
 
 ## Registration
-
-Use prisma as ORM https://www.prisma.io/docs/concepts/overview/why-prisma
-   
+- communications with backend via graphQl 
+- Credentials provider
+    
  
    
 
