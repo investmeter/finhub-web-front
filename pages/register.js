@@ -105,6 +105,7 @@ export default function Register() {
                     console.log("Registration is OK")
                     setRegistrationFormState("OK")
                     setShowErrorWindow(false)
+                    signIn('credentials', { username:  data.userEmail , password: data.password })
                 }
                 else{
                     console.log("Error during registration")
