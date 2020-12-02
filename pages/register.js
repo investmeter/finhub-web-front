@@ -104,7 +104,9 @@ export default function Register() {
                 if (res.data.registerUser.result === "OK") {
                     console.log("Registration is OK")
                     setRegistrationFormState("OK")
-                }{
+                    setShowErrorWindow(false)
+                }
+                else{
                     console.log("Error during registration")
                     setRegistrationFormState("ERROR")
                     setShowErrorWindow(true)
@@ -128,7 +130,7 @@ export default function Register() {
                 {registrationFormState === 'ERROR' &&
                     <ErrorWindow toShow={showErrorWindow} onHide={()=>{setShowErrorWindow(false); console.log("Hide")}}/>
                 }
-                {!session &&
+                {!session && registrationFormState!=='OK' &&
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Group>
                             <Form.Label>Email</Form.Label>
