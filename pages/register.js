@@ -50,9 +50,9 @@ function ErrorWindow({toShow, onHide}) {
             <>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Error</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Body>Ooops something goes wrong. Please try again</Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleClose}>
                         Ok
@@ -127,7 +127,7 @@ export default function Register() {
             <Container>
                 <h1>Register</h1>
                 {session && <div>Already signe IN. Logout First</div>}
-                {!session && registrationFormState === 'OK' && <div>Registration is OK</div> }
+                {!session && registrationFormState === 'OK' && <div>Registration is Ok. Redirecting to main</div> }
                 {registrationFormState === 'ERROR' &&
                     <ErrorWindow toShow={showErrorWindow} onHide={()=>{setShowErrorWindow(false); console.log("Hide")}}/>
                 }
