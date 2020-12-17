@@ -30,7 +30,7 @@ const SecuritiesSearchTypeHead= (props) => {
 
         client.query({
             query: gql`query securities($query:String){
-                        securities (where: {_or:[{ticker_contains: $query},{title_contains:$query}]}) {
+                        securities (search: $query) {
                         company:title
                         ticker
                       }
