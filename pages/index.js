@@ -10,11 +10,13 @@ import react, {useState} from 'react';
 import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
+// import jwt from 'next-auth/jwt'
 
 
 export default function Home() {
     const [session, loading] = useSession();
     console.log(session);
+
 
     return (
         <Layout>
@@ -47,6 +49,10 @@ export default function Home() {
                 {session && <>
                     Signed in as {session.user.email} <br/>
                     {/*<button onClick={signOut}>Sign out</button>*/}
+
+
+                    {console.log("Session:",session)}
+
                 </>}
                 </Row>
             </Container>

@@ -30,7 +30,11 @@ https://react-hook-form.com/get-started#Quickstart
 ## Registration
 - communications with backend via graphQl 
 - Credentials provider
-    
+
+## Auth for backend gateway 
+- generate JWT tokens to store user_uuid 
+- pass JWT to gateway
+- decode JWT in gateway and provide data 
  
    
 
