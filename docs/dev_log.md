@@ -2,7 +2,7 @@
 
 Implement next.js and apollo client example https://github.com/vercel/next.js/tree/master/examples/with-apollo
 
-**Use-cases**:
+Use-cases:
 - (done) prefetch first 10 assets on build time
 - (done) fetch dynamically assets when typing in:
     - use async Typehead https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/API.md#asynctypeahead
@@ -32,9 +32,12 @@ https://react-hook-form.com/get-started#Quickstart
 - Credentials provider
 
 ## Auth for backend gateway 
-- generate JWT tokens to store user_uuid 
+- [x] generate JWT tokens to store user_uuid
+- [ ] request api point to get raw jwt token 
 - pass JWT to gateway
-- decode JWT in gateway and provide data 
+- if JWT token will expire - request token from nextjs api point
+
+
  
    
 
