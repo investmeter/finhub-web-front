@@ -5,7 +5,6 @@ import Providers from 'next-auth/providers'
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import { initializeApollo } from '../../../lib/apolloClient'
 
-
 const options = {
     // Configure one or more authentication providers
     // providers: [
@@ -36,7 +35,8 @@ const options = {
                     query: gql`query AuthUser($email:String, $passHash:String){
                         authUser(email:$email, passHash:$passHash) {
                             user_uuid,
-                            email
+                            email,
+                            token
                       }
                     }`,
                     variables: {
@@ -77,20 +77,30 @@ const options = {
     callbacks: {
         session: async (session, user) => {
             //session.foo = 'bar' // Add property to session
-            session.user.uuid = user.user_uuid
+            console.log("Session's user", user)
+            // session.user.uuid = user.user_uuid
+            session.user.apiToken = user.apiToken
             console.log("Session " , session)
-            console.log("User " , user)
+            // console.log("User " , user)
             return Promise.resolve(session)
         },
-        jwt: async (token, user, account, profile, isNewUser) => {
+         jwt: async (token, user, account, profile, isNewUser) => {
+        //
+        //       console.log("context", context)
+             console.log("JWT User", user)
+             console.log("JWT Token", token)
+             if (user) {
+                 token.user_uuid = user.user_uuid || {}
+                 token.apiToken = user.token || {}
+             }
 
-            console.log("JWT Token", token)
-            console.log("JWT User", user)
-            if (user) {
-                token.user_uuid = user.user_uuid || {}
-            }
+             if (token  && !user){
+                 // refresh token from gateway
+                 console.log("Going to refresh api token....")
+             }
+
             return Promise.resolve(token)
-
+        //
         }
     }
 }
