@@ -6,7 +6,7 @@ import {signIn, signOut} from 'next-auth/client'
 import { useRouter } from 'next/router'
 
 
-export default function Layout({children, userEmail, session}) {
+export default function Layout({children, userEmail, isSession}) {
 
     const noBulletsList= {listStyleType: "none"};
 
@@ -45,13 +45,13 @@ export default function Layout({children, userEmail, session}) {
                     </NavDropdown>
                 </Nav>
 
-                    {!session && <>
+                    {!isSession && <>
                         <Button onClick={signIn}>Sign in</Button>
                     </>}
-                    {session &&
+                    {isSession &&
                     <Nav className="ml-auto">
                         <NavDropdown title={userEmail} >
-                            <NavDropdown.Item href="#profile">Profile</NavDropdown.Item>
+                            <NavDropdown.Item href="/profile" onClick= {function (e){e.preventDefault(); router.push('/profile')}} >Profile</NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item href="#" onClick={signOutRedirect}>Sign out</NavDropdown.Item>
                         </NavDropdown>

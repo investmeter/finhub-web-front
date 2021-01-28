@@ -10,15 +10,13 @@ import react, {useState} from 'react';
 import Layout from '../components/layout';
 
 import {signIn, signOut, useSession, getSession} from 'next-auth/client'
-// import jwt from 'next-auth/jwt'
 
+export default function Profile({isSession, userEmail}) {
 
-export default function Profile({session}) {
-
-    if (!session)  {
+    if (!isSession)  {
         return (
             <Layout>
-            <Container>
+                <Container>
                     <h1>Profile </h1>
                     <h2>Please Sign-In to continue</h2>
                 </Container>
@@ -26,12 +24,12 @@ export default function Profile({session}) {
         )
     }
 
-    //const [session, loading] = useSession();
-    console.log(session);
+    // //const [session, loading] = useSession();
+    // console.log(session);
 
     return (
 
-        <Layout userEmail="TEST" session={true}>
+        <Layout userEmail={userEmail} isSession={isSession}>
             <Container>
                 <h1> Profile </h1>
 
@@ -46,7 +44,8 @@ export async function getServerSideProps({req, res}) {
     console.log("Session from page ", session)
     return {
         props: {
-            session:true
+            isSession:true,
+            userEmail : !!session && session.user.email
         }, // will be passed to the page component as props
     }
 }

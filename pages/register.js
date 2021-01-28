@@ -126,7 +126,7 @@ export default function Register() {
         <Layout>
             <Container>
                 <h1>Register</h1>
-                {session && <div>Already signe IN. Logout First</div>}
+                {session && <div>Already signed-in. Log-out First</div>}
                 {!session && registrationFormState === 'OK' && <div>Registration is Ok. Redirecting to main</div> }
                 {registrationFormState === 'ERROR' &&
                     <ErrorWindow toShow={showErrorWindow} onHide={()=>{setShowErrorWindow(false); console.log("Hide")}}/>
