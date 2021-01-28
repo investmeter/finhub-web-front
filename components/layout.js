@@ -1,16 +1,16 @@
 import Head from "next/head";
 import Link from "next/link";
 import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
-import {signIn, signOut, useSession, getSession} from 'next-auth/client'
+import {signIn, signOut} from 'next-auth/client'
 
 import { useRouter } from 'next/router'
 
 
-export default function Layout({children}) {
+export default function Layout({children, userEmail, session}) {
 
     const noBulletsList= {listStyleType: "none"};
 
-    const [session, loading] = useSession();
+    // const [session, loading] = useSession();
     const router = useRouter();
 
     const signOutRedirect = () => {
@@ -50,7 +50,7 @@ export default function Layout({children}) {
                     </>}
                     {session &&
                     <Nav className="ml-auto">
-                        <NavDropdown title={session.user.email} >
+                        <NavDropdown title={userEmail} >
                             <NavDropdown.Item href="#profile">Profile</NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item href="#" onClick={signOutRedirect}>Sign out</NavDropdown.Item>
@@ -84,11 +84,4 @@ export default function Layout({children}) {
 
         </>
 )
-}
-
-export async function getServerSideProps(context) {
-    const session = await getSession(context)
-    return {
-        props: { session }
-    }
 }

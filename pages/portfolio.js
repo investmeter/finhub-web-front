@@ -58,7 +58,7 @@ function PortfolioAdd({assets}) {
     console.log(assets);
 
     return (
-        <Layout>
+        <Layout session={!!session} userEmail={session && session.user.email}>
             <Container>
                 <h1>Portfolio</h1>
                 <h2>Add Item</h2>

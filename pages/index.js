@@ -19,7 +19,7 @@ export default function Home() {
 
 
     return (
-        <Layout>
+        <Layout session={!!session} userEmail={session && session.user.email}>
 
             <Jumbotron  className='bg-white'>
                 <Container>
