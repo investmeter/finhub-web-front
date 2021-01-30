@@ -3,10 +3,13 @@ import Link from "next/link";
 import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
 import {signIn, signOut} from 'next-auth/client'
 
+import react from 'react';
+
+
 import { useRouter } from 'next/router'
 
 
-export default function Layout({children, userEmail, isSession}) {
+export default function Layout({isProtected, children, userEmail, isSession}) {
 
     const noBulletsList= {listStyleType: "none"};
 
@@ -65,7 +68,18 @@ export default function Layout({children, userEmail, isSession}) {
         </Navbar>
 
         <main>
-            {children}
+            {isProtected && !isSession &&
+                <Container>
+                    <Row>&nbsp;</Row>
+                    <h1>Session Expired</h1>
+                    <h2>Please sign-in</h2>
+                </Container>
+            }
+
+            {((!!!isProtected) || (!!isProtected && !!isSession)) &&
+              children
+            }
+
         </main>
 
             {/*<Container fluid className='bg-dark'>*/}
