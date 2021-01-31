@@ -24,9 +24,9 @@ yarn start
 
 ```shell
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
-# add  line above  to /etc/rc.local without sudo 
+# install following utility to persist iptables changes after reboot
 
-echo 'iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000' | sudo tee -a /etc/rc.local
+sudo apt-get install iptables-persistent
 
 
 ```
