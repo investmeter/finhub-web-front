@@ -40,7 +40,7 @@ const SecuritiesSearchTypeHead= (props) => {
             variables: {
                 query:query
             },
-            context:{token:"TEST"}
+            context:{}
         }).then(
             (res) => {
                 setOptions(res.data.securities)
