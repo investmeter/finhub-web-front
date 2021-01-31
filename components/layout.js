@@ -1,16 +1,19 @@
 import Head from "next/head";
 import Link from "next/link";
 import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
-import {signIn, signOut, useSession, getSession} from 'next-auth/client'
+import {signIn, signOut} from 'next-auth/client'
+
+import react from 'react';
+
 
 import { useRouter } from 'next/router'
 
 
-export default function Layout({children}) {
+export default function Layout({isProtected, children, userEmail, isSession}) {
 
     const noBulletsList= {listStyleType: "none"};
 
-    const [session, loading] = useSession();
+    // const [session, loading] = useSession();
     const router = useRouter();
 
     const signOutRedirect = () => {
@@ -45,13 +48,13 @@ export default function Layout({children}) {
                     </NavDropdown>
                 </Nav>
 
-                    {!session && <>
+                    {!isSession && <>
                         <Button onClick={signIn}>Sign in</Button>
                     </>}
-                    {session &&
+                    {isSession &&
                     <Nav className="ml-auto">
-                        <NavDropdown title={session.user.email} >
-                            <NavDropdown.Item href="#profile">Profile</NavDropdown.Item>
+                        <NavDropdown title={userEmail} >
+                            <NavDropdown.Item href="/profile" onClick= {function (e){e.preventDefault(); router.push('/profile')}} >Profile</NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item href="#" onClick={signOutRedirect}>Sign out</NavDropdown.Item>
                         </NavDropdown>
@@ -65,7 +68,19 @@ export default function Layout({children}) {
         </Navbar>
 
         <main>
-            {children}
+            {isProtected && !isSession &&
+                <Container>
+                    <Row>&nbsp;</Row>
+                    <h1>Session Expired</h1>
+                    <h2>Please <Link onClick={signIn} href="/auth/credentials-signin"><a href="/auth/credentials-signin">sign-in</a></Link></h2>
+
+                </Container>
+            }
+
+            {((!!!isProtected) || (!!isProtected && !!isSession)) &&
+              children
+            }
+
         </main>
 
             {/*<Container fluid className='bg-dark'>*/}
@@ -84,11 +99,4 @@ export default function Layout({children}) {
 
         </>
 )
-}
-
-export async function getServerSideProps(context) {
-    const session = await getSession(context)
-    return {
-        props: { session }
-    }
 }

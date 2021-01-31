@@ -11,12 +11,14 @@ import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 
 import { initializeApollo } from '../lib/apolloClient'
+import * as _ from 'lodash'
 
 let AsyncTypeHead = withAsync(Typeahead)
 
 const SecuritiesSearchTypeHead= (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
+
 
     // if (props.options !== undefined) {
     //     setOptions(props.options)
@@ -37,7 +39,8 @@ const SecuritiesSearchTypeHead= (props) => {
         }`,
             variables: {
                 query:query
-            }
+            },
+            context:{}
         }).then(
             (res) => {
                 setOptions(res.data.securities)
@@ -57,9 +60,22 @@ function PortfolioAdd({assets}) {
     console.log(session);
     console.log(assets);
 
+    if (loading) {
+        return (
+            <Layout>
+                <Container>
+                    <Row>&nbsp;</Row>
+                    <h1>Loading....</h1>
+                </Container>
+            </Layout>
+        )
+    }
+
     return (
-        <Layout>
+        <Layout isProtected={true} isSession={!!_.get(session,'user.apiToken')} userEmail={!!session && session.user.email} >
             <Container>
+                <Row>&nbsp;</Row>
+
                 <h1>Portfolio</h1>
                 <h2>Add Item</h2>
                 <Form>
@@ -102,7 +118,7 @@ function PortfolioAdd({assets}) {
     )
 }
 
-export const  getStaticProps = async (ctx) => {
+export const  getServerSideProps = async (ctx) => {
 
     const client = initializeApollo()
 

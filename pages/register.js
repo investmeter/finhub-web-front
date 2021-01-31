@@ -18,6 +18,7 @@ import * as yup from 'yup';
 
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import { initializeApollo } from '../lib/apolloClient'
+import React from "react";
 
 
 const schema = yup.object({
@@ -105,7 +106,9 @@ export default function Register() {
                     console.log("Registration is OK")
                     setRegistrationFormState("OK")
                     setShowErrorWindow(false)
-                    signIn('credentials', { username:  data.userEmail , password: data.password })
+                    signIn('credentials', { username:  data.userEmail ,
+                        password: data.password,
+                        callbackUrl: '/portfolio'  })
                 }
                 else{
                     console.log("Error during registration")
@@ -125,9 +128,10 @@ export default function Register() {
     return (
         <Layout>
             <Container>
+                <Row>&nbsp;</Row>
                 <h1>Register</h1>
-                {session && <div>Already signe IN. Logout First</div>}
-                {!session && registrationFormState === 'OK' && <div>Registration is Ok. Redirecting to main</div> }
+                {session && <div>Already signed-in. Log-out First</div>}
+                {!session && registrationFormState === 'OK' && <div>Registration is Ok. Redirecting....</div> }
                 {registrationFormState === 'ERROR' &&
                     <ErrorWindow toShow={showErrorWindow} onHide={()=>{setShowErrorWindow(false); console.log("Hide")}}/>
                 }

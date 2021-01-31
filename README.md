@@ -1,5 +1,9 @@
 # [Next.js](https://nextjs.org/) + bootsrap test project
 
+Env vars: 
+
+
+
 ## Scope
 - Some pages with layout
 - login / registration

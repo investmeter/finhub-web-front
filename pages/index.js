@@ -19,7 +19,7 @@ export default function Home() {
 
 
     return (
-        <Layout>
+        <Layout isSession={!!session} userEmail={session && session.user.email}>
 
             <Jumbotron  className='bg-white'>
                 <Container>
@@ -30,32 +30,32 @@ export default function Home() {
                 </Container>
             </Jumbotron>
 
-            <Container>
-                <Row className="justify-content-center">
-                    <Col md="auto">
-                        Fill in Portfolio
-                    </Col>
-                </Row>
+            {/*<Container>*/}
+            {/*    <Row className="justify-content-center">*/}
+            {/*        <Col md="auto">*/}
+            {/*            Fill in Portfolio*/}
+            {/*        </Col>*/}
+            {/*    </Row>*/}
 
-            </Container>
+            {/*</Container>*/}
 
-            <Container fluid className="bg-dark text-white">
-                <Row>
+            {/*<Container fluid className="bg-dark text-white">*/}
+            {/*    <Row>*/}
 
-                {!session && <>
-                    Not signed in <br/>
-                    <button onClick={signIn}>Sign in</button>
-                </>}
-                {session && <>
-                    Signed in as {session.user.email} <br/>
-                    {/*<button onClick={signOut}>Sign out</button>*/}
+            {/*    {!session && <>*/}
+            {/*        Not signed in <br/>*/}
+            {/*        <button onClick={signIn}>Sign in</button>*/}
+            {/*    </>}*/}
+            {/*    {session && <>*/}
+            {/*        Signed in as {session.user.email} <br/>*/}
+            {/*        /!*<button onClick={signOut}>Sign out</button>*!/*/}
 
 
-                    {console.log("Session:",session)}
+            {/*        {console.log("Session:",session)}*/}
 
-                </>}
-                </Row>
-            </Container>
+            {/*    </>}*/}
+            {/*    </Row>*/}
+            {/*</Container>*/}
 
         </Layout>
     )
