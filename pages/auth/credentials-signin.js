@@ -13,7 +13,7 @@ export default function SignIn({ csrfToken }) {
         <Layout isProtected={false}  >
         <Container>
             <Row>&nbsp;</Row>
-            <h1>Sign-In or <Link href="/register"><a href='/register'>register</a></Link></h1>
+            <h1>Sign-In or <Link href="/register"><a href='/register' style={{textDecoration:'underline'}}>register</a></Link></h1>
 
             <Form method='post' action='/api/auth/callback/credentials'>
             <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
