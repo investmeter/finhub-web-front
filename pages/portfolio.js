@@ -118,7 +118,7 @@ function PortfolioAdd({assets}) {
     )
 }
 
-export const  getStaticProps = async (ctx) => {
+export const  getServerSideProps = async (ctx) => {
 
     const client = initializeApollo()
 
