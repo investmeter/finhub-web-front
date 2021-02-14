@@ -127,9 +127,52 @@ function PortfolioAdd({assets}) {
                         <Form.Row>
                            <Col><RBTDatePicker /></Col>
                         </Form.Row>
-
-
                     </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Price</Form.Label>
+                        <Form.Row>
+                        <Col>
+                                <Form.Control placeholder="Average price of acquired securities"/>
+                        </Col>
+                            <Form.Label column >USD</Form.Label>
+                        </Form.Row>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Amount</Form.Label>
+
+                        <Form.Row>
+
+                            <Col>
+                                <Form.Control placeholder='Number of securities'></Form.Control>
+                            </Col>
+                            <Form.Label column >psc.</Form.Label>
+
+                        </Form.Row>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Total deal Amount</Form.Label>
+                        <Form.Row>
+                            <Col>
+                                <Form.Control placeholder="Total paid for securities"/>
+                            </Col>
+                            <Form.Label column >USD</Form.Label>
+                        </Form.Row>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Broker Fee</Form.Label>
+                        <Form.Row>
+                            <Col>
+                                <Form.Control placeholder="fee"/>
+                            </Col>
+                            <Form.Label column >USD</Form.Label>
+                        </Form.Row>
+                    </Form.Group>
+
+                    <Button type="submit">Add to Portfolio</Button>
 
                 </Form>
 
