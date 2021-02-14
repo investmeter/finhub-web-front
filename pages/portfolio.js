@@ -8,6 +8,9 @@ import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
 import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
+
+import DatePicker from "react-datepicker";
+
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 
 import { initializeApollo } from '../lib/apolloClient'
@@ -55,6 +58,15 @@ const SecuritiesSearchTypeHead= (props) => {
         )
 
 }
+
+const RBTDatePicker = (props) => {
+    const [startDate, setStartDate] = useState(new Date());
+    return (
+        <DatePicker {...props} selected={startDate} onChange={date => setStartDate(date)}  className="rbt-input rbt-input-main form-control"/>
+    )
+}
+
+
 function PortfolioAdd({assets}) {
     const [session, loading] = useSession();
     console.log(session);
@@ -107,6 +119,15 @@ function PortfolioAdd({assets}) {
 
                         >
                         </SecuritiesSearchTypeHead>
+
+                    </Form.Group>
+
+                    <Form.Group controlId="dateAdded">
+                        <Form.Label>Date of deal</Form.Label>
+                        <Form.Row>
+                           <Col><RBTDatePicker /></Col>
+                        </Form.Row>
+
 
                     </Form.Group>
 
