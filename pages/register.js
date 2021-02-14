@@ -144,7 +144,7 @@ export default function Register() {
                                         name="userEmail"
                                         control={control}
                                         defaultValue=""
-                                        isValid={!errors.userEmail}
+                                        isValid={formState.dirtyFields.userEmail && !errors.userEmail}
                                         isInvalid={errors.userEmail}
                                         cntx={formState}
                             />
