@@ -20,9 +20,14 @@ import {gql} from '@apollo/client';
 import {initializeApollo} from '../lib/apolloClient'
 import * as _ from 'lodash'
 
+
+const today = new Date()
+const tomorrow = new Date(today)
+tomorrow.setDate(tomorrow.getDate() + 1)
+
 const schema = yup.object({
     securityId: yup.number().positive().required(),
-    dateAdded: yup.date().required().max(new Date(), "Date could not be in future"),
+    dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
     price: yup.number().required(),
     amount: yup.number().positive(),
     totalPaid: yup.number(),
@@ -109,6 +114,8 @@ const RBTDatePicker = (props) => {
         return () => unregister(name);
     }, [name, register, unregister]);
 
+    setValue('dateAdded', startDate,{shouldValidate: true})
+
     return (
         <DatePicker isValid={isValid} isInvalid={isInvalid} selected={startDate} onChange={date => {
             setStartDate(date)
@@ -123,7 +130,8 @@ function PortfolioAdd({assets}) {
 
     const {control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
         {
-            resolver: yupResolver(schema)
+            resolver: yupResolver(schema),
+            shouldFocusError: false
         }
     );
 
@@ -159,10 +167,10 @@ function PortfolioAdd({assets}) {
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <Form.Group controlId="formAssetType">
                         <Form.Label>Type of Instrument</Form.Label>
-                        <Form.Control as='select'>
+                        <Form.Control as='select' defaultValue='stocks'>
                             <option key='blankChoice' hidden value>Choose</option>
-                            <option>Stocks</option>
-                            <option>Bonds</option>
+                            <option value='stocks'>Stocks</option>
+                            {/*<option>Bonds</option>*/}
                         </Form.Control>
 
 
@@ -176,7 +184,7 @@ function PortfolioAdd({assets}) {
                             name='securityId'
                             options={assets}
                             defaultValue={0}
-                            isValid={formState.dirtyFields.securityId && !errors.securityId}
+                            //isValid={formState.dirtyFields.securityId && !errors.securityId}
                             isInvalid={!!errors.securityId}
                             setValue={setValue}
                             register={register}
@@ -193,7 +201,7 @@ function PortfolioAdd({assets}) {
                             <Col  xs="auto">
                                 <RBTDatePicker name='dateAdded'
                                                {...{register, unregister, setValue}}
-                                               isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
+                                               //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
                                                isInvalid={!!errors.dateAdded}
                                 />
                             </Col>
@@ -212,7 +220,7 @@ function PortfolioAdd({assets}) {
                                 <Form.Control name="price"
                                               placeholder="Average price of acquired securities"
                                               ref={register}
-                                              isValid={formState.dirtyFields.price && !errors.price}
+                                              //isValid={formState.dirtyFields.price && !errors.price}
                                               isInvalid={!!errors.price}/>
                             </Col>
 
@@ -229,7 +237,7 @@ function PortfolioAdd({assets}) {
                                 <Form.Control placeholder='Number of securities'
                                               name="amount"
                                               ref={register}
-                                              isValid={formState.dirtyFields.amount && !errors.amount}
+                                              //isValid={formState.dirtyFields.amount && !errors.amount}
                                               isInvalid={!!errors.amount}
 
                                 />
@@ -246,7 +254,7 @@ function PortfolioAdd({assets}) {
                                 <Form.Control placeholder="Total paid for securities"
                                               name="totalPaid"
                                               ref={register}
-                                              isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
+                                              //isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
                                               isInvalid={!!errors.totalPaid}
                                 />
                             </Col>
@@ -262,7 +270,7 @@ function PortfolioAdd({assets}) {
                                               name="brokerFee"
                                               defaultValue={0}
                                               ref={register}
-                                              isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
+                                              //isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
                                               isInvalid={!!errors.brokerFee}
                                 />
                             </Col>
