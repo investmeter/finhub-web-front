@@ -34,6 +34,9 @@ const schema = yup.object({
 
 let AsyncTypeHead = withAsync(Typeahead)
 
+// validation setup
+
+
 const SecuritiesSearchTypeHead = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
@@ -69,15 +72,26 @@ const SecuritiesSearchTypeHead = (props) => {
     }
 
     return (
-        <AsyncTypeHead {...props} options={options} onSearch={handleSearch} isLoading={isLoading}
-                       onChange={(selected) => {
-                           console.log('Selected', selected);
+        <AsyncTypeHead options={options}
+                       id = 'securititesSearch'
+                       onSearch={handleSearch}
+                       isLoading={isLoading}
+                       highlightOnlyResult={true}
+                       labelKey={option => `${option.ticker} ${option.company}`}
+                       placeholder="Type ticker or company name"
+                       clearButton
+                       defaultOpen={true}
+                       isValid = {props.isValid}
+                       isInvalid = {props.isInvalid}
+                        onChange={(selected) => {
+                            console.log('Selected', selected);
                            if (selected.length > 0) {
-                               props.setValue('securityId', selected[0].value, { shouldDirty: true, shouldValidate:true })
-                           } else {
-                               props.setValue('securityId', 0, { shouldDirty: true, shouldValidate:true })
+                               props.onChange( selected[0].value)
                            }
-                       }}
+                           else{
+                               props.onChange( undefined)
+                           }
+                        }}
 
         >
         </AsyncTypeHead>
@@ -87,13 +101,23 @@ const SecuritiesSearchTypeHead = (props) => {
 const RBTDatePicker = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     return (
-        <DatePicker {...props} selected={startDate} onChange={date => setStartDate(date)}
+        <DatePicker {...props} selected={startDate} onChange={date => {setStartDate(date)
+        props.setValue('dateAdded',date, { shouldDirty: true, shouldValidate:true })
+        }}
                     className="rbt-input rbt-input-main form-control"/>
     )
 }
 
 
 function PortfolioAdd({assets}) {
+
+    const { control, handleSubmit, watch, errors, formState} = useForm(
+        // {
+        // mode: "onChange",
+        // resolver: yupResolver(schema)
+        //}
+    );
+
     const [session, loading] = useSession();
     console.log(session);
     console.log(assets);
@@ -109,13 +133,7 @@ function PortfolioAdd({assets}) {
         )
     }
 
-    // validation setup
-    const { register, control, handleSubmit, watch, errors, formState, setValue} = useForm(
-        {
-        mode: "onChange",
-        resolver: yupResolver(schema)
-    }
-    );
+
 
     const onSubmit = (data) => {
         console.log("Submitted", data)
@@ -148,28 +166,32 @@ function PortfolioAdd({assets}) {
                                     id='asset-id'
                                     name='securityId'
                                     control={control}
-                                    highlightOnlyResult={true}
                                     options={assets}
-                                    labelKey={option => `${option.ticker} ${option.company}`}
-                                    placeholder="Type ticker or company name"
-                                    clearButton
-                                    defaultOpen={true}
                                     defaultValue={0}
-                                    setValue={setValue}
                                     isValid={formState.dirtyFields.securityId && !errors.securityId}
                                     isInvalid={errors.securityId}
+                                    render = { ({onChange, value}) =>
+                                        <SecuritiesSearchTypeHead onChange={onChange} />
+                                    }
                         >
 
                         </Controller>
 
                     </Form.Group>
 
-                    <Form.Group controlId="dateAdded">
-                        <Form.Label>Date of deal</Form.Label>
-                        <Form.Row>
-                            <Col><RBTDatePicker/></Col>
-                        </Form.Row>
-                    </Form.Group>
+                    {/*<Form.Group controlId="dateAdded">*/}
+                    {/*    <Form.Label>Date of deal</Form.Label>*/}
+                    {/*    <Form.Row>*/}
+                    {/*        <Col>*/}
+                    {/*            <Controller name='dateAdded'*/}
+                    {/*                        control={control}*/}
+                    {/*                        as={RBTDatePicker}*/}
+                    {/*                        isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}*/}
+                    {/*                        isInvalid={errors.dateAdded}*/}
+                    {/*            />*/}
+                    {/*        </Col>*/}
+                    {/*    </Form.Row>*/}
+                    {/*</Form.Group>*/}
 
                     <Form.Group>
                         <Form.Label>Price</Form.Label>
@@ -223,34 +245,34 @@ function PortfolioAdd({assets}) {
         </Layout>
     )
 }
-
-export const getServerSideProps = async (ctx) => {
-
-    const client = initializeApollo()
-
-    let res;
-
-    console.log("Fetching...")
-
-    res = await client.query({
-        query: gql`query {
-                    securities (limit: 10){
-                        company: title
-                        ticker
-                      }
-                }`
-    });
-
-
-    return {
-        props:
-            {
-                assets: res.data.securities,
-                initialApolloState: client.cache.extract()
-            }
-        //, revalidate: 1
-    }
-
-}
+//
+// export const getServerSideProps = async (ctx) => {
+//
+//     // const client = initializeApollo()
+//     //
+//     // let res;
+//     //
+//     // console.log("Fetching...")
+//     //
+//     // res = await client.query({
+//     //     query: gql`query {
+//     //                 securities (limit: 10){
+//     //                     company: title
+//     //                     ticker
+//     //                   }
+//     //             }`
+//     // });
+//     //
+//     //
+//     // return {
+//     //     props:
+//     //         {
+//     //             assets: res.data.securities,
+//     //             initialApolloState: client.cache.extract()
+//     //         }
+//     //     //, revalidate: 1
+//     // }
+//
+// }
 
 export default PortfolioAdd
