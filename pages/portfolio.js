@@ -1,26 +1,24 @@
-import Head from 'next/head'
 // import styles from '../styles/Home.module.css'
-import {Container, Row, Col, Form} from 'react-bootstrap';
+import {Col, Container, Form, Row} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
-import react, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../components/layout';
 
-import {signIn, signOut, useSession} from 'next-auth/client'
+import {useSession} from 'next-auth/client'
 import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
 
 import DatePicker from "react-datepicker";
 
-import {useForm, Controller} from "react-hook-form"
+import {useForm} from "react-hook-form"
 import {yupResolver} from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
 
-import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
+import {gql} from '@apollo/client';
 
 import {initializeApollo} from '../lib/apolloClient'
 import * as _ from 'lodash'
-import React from "react";
 
 const schema = yup.object({
     securityId: yup.number().positive().required(),
@@ -41,10 +39,10 @@ const SecuritiesSearchTypeHead = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
 
-    const { register, unregister, setValue, name } = props
+    const {register, unregister, setValue, name} = props
 
     useEffect(() => {
-        register({ name });
+        register({name});
         return () => unregister(name);
     }, [name, register, unregister]);
 
@@ -76,7 +74,7 @@ const SecuritiesSearchTypeHead = (props) => {
 
     return (
         <AsyncTypeHead options={options}
-                       id = 'securityIdCntrl'
+                       id='securityIdCntrl'
                        onSearch={handleSearch}
                        isLoading={isLoading}
                        highlightOnlyResult={true}
@@ -84,17 +82,16 @@ const SecuritiesSearchTypeHead = (props) => {
                        placeholder="Type ticker or company name"
                        clearButton
                        defaultOpen={true}
-                       isValid = {props.isValid}
-                       isInvalid = {props.isInvalid}
-                        onChange={(selected) => {
-                            console.log('Selected', selected);
+                       isValid={props.isValid}
+                       isInvalid={props.isInvalid}
+                       onChange={(selected) => {
+                           console.log('Selected', selected);
                            if (selected.length > 0) {
-                               setValue(name,  selected[0].value, { shouldValidate: true, shouldDirty: true })
+                               setValue(name, selected[0].value, {shouldValidate: true, shouldDirty: true})
+                           } else {
+                               setValue(name, undefined, {shouldValidate: true, shouldDirty: true})
                            }
-                           else{
-                               setValue(name, undefined,  { shouldValidate: true, shouldDirty: true })
-                           }
-                        }}
+                       }}
 
         >
         </AsyncTypeHead>
@@ -104,8 +101,9 @@ const SecuritiesSearchTypeHead = (props) => {
 const RBTDatePicker = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     return (
-        <DatePicker {...props} selected={startDate} onChange={date => {setStartDate(date)
-        props.setValue('dateAdded',date, { shouldDirty: true, shouldValidate:true })
+        <DatePicker {...props} selected={startDate} onChange={date => {
+            setStartDate(date)
+            props.setValue('dateAdded', date, {shouldDirty: true, shouldValidate: true})
         }}
                     className="rbt-input rbt-input-main form-control"/>
     )
@@ -114,9 +112,9 @@ const RBTDatePicker = (props) => {
 
 function PortfolioAdd({assets}) {
 
-    const { control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
+    const {control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
         {
-        resolver: yupResolver(schema)
+            resolver: yupResolver(schema)
         }
     );
 
@@ -134,7 +132,6 @@ function PortfolioAdd({assets}) {
             </Layout>
         )
     }
-
 
 
     const onSubmit = (data) => {
@@ -166,15 +163,15 @@ function PortfolioAdd({assets}) {
                         <Form.Label>Instrument</Form.Label>
 
                         <SecuritiesSearchTypeHead
-                                    id='asset-id'
-                                    name='securityId'
-                                    options={assets}
-                                    defaultValue={0}
-                                    isValid={formState.dirtyFields.securityId && !errors.securityId}
-                                    isInvalid={!!errors.securityId}
-                                    setValue={setValue}
-                                    register={register}
-                                    unregister={unregister}
+                            id='asset-id'
+                            name='securityId'
+                            options={assets}
+                            defaultValue={0}
+                            isValid={formState.dirtyFields.securityId && !errors.securityId}
+                            isInvalid={!!errors.securityId}
+                            setValue={setValue}
+                            register={register}
+                            unregister={unregister}
                         >
 
                         </SecuritiesSearchTypeHead>
@@ -247,6 +244,7 @@ function PortfolioAdd({assets}) {
         </Layout>
     )
 }
+
 //
 // export const getServerSideProps = async (ctx) => {
 //
