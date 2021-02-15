@@ -22,11 +22,11 @@ import * as _ from 'lodash'
 
 const schema = yup.object({
     securityId: yup.number().positive().required(),
-    // dateAdded: yup.date().required(),
-    // price: yup.number().required(),
-    // amount: yup.number().positive(),
-    // totalPaid: yup.number(),
-    // brokerFee: yup.number()
+    dateAdded: yup.date().required().max(new Date(), "Date could not be in future"),
+    price: yup.number().required(),
+    amount: yup.number().positive(),
+    totalPaid: yup.number(),
+    brokerFee: yup.number()
 });
 
 
@@ -100,12 +100,21 @@ const SecuritiesSearchTypeHead = (props) => {
 
 const RBTDatePicker = (props) => {
     const [startDate, setStartDate] = useState(new Date());
+
+    const {isValid, isInvalid} = props
+    const {register, unregister, setValue, name} = props
+
+    useEffect(() => {
+        register({name});
+        return () => unregister(name);
+    }, [name, register, unregister]);
+
     return (
-        <DatePicker {...props} selected={startDate} onChange={date => {
+        <DatePicker isValid={isValid} isInvalid={isInvalid} selected={startDate} onChange={date => {
             setStartDate(date)
-            props.setValue('dateAdded', date, {shouldDirty: true, shouldValidate: true})
+            setValue('dateAdded', date, {shouldDirty: true, shouldValidate: true})
         }}
-                    className="rbt-input rbt-input-main form-control"/>
+                    className={`form-control ${isValid?"is-valid":""} ${isInvalid?"is-invalid":""}`}/>
     )
 }
 
@@ -178,26 +187,35 @@ function PortfolioAdd({assets}) {
 
                     </Form.Group>
 
-                    {/*<Form.Group controlId="dateAdded">*/}
-                    {/*    <Form.Label>Date of deal</Form.Label>*/}
-                    {/*    <Form.Row>*/}
-                    {/*        <Col>*/}
-                    {/*            <Controller name='dateAdded'*/}
-                    {/*                        control={control}*/}
-                    {/*                        as={RBTDatePicker}*/}
-                    {/*                        isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}*/}
-                    {/*                        isInvalid={errors.dateAdded}*/}
-                    {/*            />*/}
-                    {/*        </Col>*/}
-                    {/*    </Form.Row>*/}
-                    {/*</Form.Group>*/}
+                    <Form.Group controlId="dateAdded">
+                        <Form.Label>Date of deal</Form.Label>
+                        <Form.Row>
+                            <Col  xs="auto">
+                                <RBTDatePicker name='dateAdded'
+                                               {...{register, unregister, setValue}}
+                                               isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
+                                               isInvalid={!!errors.dateAdded}
+                                />
+                            </Col>
+                            <Col  xs="auto">
+                                <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
+                            </Col>
+
+                        </Form.Row>
+
+                    </Form.Group>
 
                     <Form.Group>
                         <Form.Label>Price</Form.Label>
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Average price of acquired securities"/>
+                                <Form.Control name="price"
+                                              placeholder="Average price of acquired securities"
+                                              ref={register}
+                                              isValid={formState.dirtyFields.price && !errors.price}
+                                              isInvalid={!!errors.price}/>
                             </Col>
+
                             <Form.Label column>USD</Form.Label>
                         </Form.Row>
                     </Form.Group>
@@ -208,7 +226,13 @@ function PortfolioAdd({assets}) {
                         <Form.Row>
 
                             <Col>
-                                <Form.Control placeholder='Number of securities'></Form.Control>
+                                <Form.Control placeholder='Number of securities'
+                                              name="amount"
+                                              ref={register}
+                                              isValid={formState.dirtyFields.amount && !errors.amount}
+                                              isInvalid={!!errors.amount}
+
+                                />
                             </Col>
                             <Form.Label column>psc.</Form.Label>
 
@@ -219,7 +243,12 @@ function PortfolioAdd({assets}) {
                         <Form.Label>Total deal Amount</Form.Label>
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Total paid for securities"/>
+                                <Form.Control placeholder="Total paid for securities"
+                                              name="totalPaid"
+                                              ref={register}
+                                              isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
+                                              isInvalid={!!errors.totalPaid}
+                                />
                             </Col>
                             <Form.Label column>USD</Form.Label>
                         </Form.Row>
@@ -229,7 +258,13 @@ function PortfolioAdd({assets}) {
                         <Form.Label>Broker Fee</Form.Label>
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="fee"/>
+                                <Form.Control placeholder="fee"
+                                              name="brokerFee"
+                                              defaultValue={0}
+                                              ref={register}
+                                              isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
+                                              isInvalid={!!errors.brokerFee}
+                                />
                             </Col>
                             <Form.Label column>USD</Form.Label>
                         </Form.Row>
