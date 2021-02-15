@@ -3,7 +3,7 @@ import Head from 'next/head'
 import {Container, Row, Col, Form} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
-import react, {useState} from 'react';
+import react, {useEffect, useState} from 'react';
 import Layout from '../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
@@ -24,11 +24,11 @@ import React from "react";
 
 const schema = yup.object({
     securityId: yup.number().positive().required(),
-    dateAdded: yup.date().required(),
-    price: yup.number().required(),
-    amount: yup.number().positive(),
-    totalPaid: yup.number(),
-    brokerFee: yup.number()
+    // dateAdded: yup.date().required(),
+    // price: yup.number().required(),
+    // amount: yup.number().positive(),
+    // totalPaid: yup.number(),
+    // brokerFee: yup.number()
 });
 
 
@@ -41,9 +41,12 @@ const SecuritiesSearchTypeHead = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
 
-    // if (props.options !== undefined) {
-    //     setOptions(props.options)
-    // }
+    const { register, unregister, setValue, name } = props
+
+    useEffect(() => {
+        register({ name });
+        return () => unregister(name);
+    }, [name, register, unregister]);
 
 
     const handleSearch = (query) => {
@@ -73,7 +76,7 @@ const SecuritiesSearchTypeHead = (props) => {
 
     return (
         <AsyncTypeHead options={options}
-                       id = 'securititesSearch'
+                       id = 'securityIdCntrl'
                        onSearch={handleSearch}
                        isLoading={isLoading}
                        highlightOnlyResult={true}
@@ -86,10 +89,10 @@ const SecuritiesSearchTypeHead = (props) => {
                         onChange={(selected) => {
                             console.log('Selected', selected);
                            if (selected.length > 0) {
-                               props.onChange( selected[0].value)
+                               setValue(name,  selected[0].value, { shouldValidate: true, shouldDirty: true })
                            }
                            else{
-                               props.onChange( undefined)
+                               setValue(name, undefined,  { shouldValidate: true, shouldDirty: true })
                            }
                         }}
 
@@ -111,11 +114,10 @@ const RBTDatePicker = (props) => {
 
 function PortfolioAdd({assets}) {
 
-    const { control, handleSubmit, watch, errors, formState} = useForm(
-        // {
-        // mode: "onChange",
-        // resolver: yupResolver(schema)
-        //}
+    const { control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
+        {
+        resolver: yupResolver(schema)
+        }
     );
 
     const [session, loading] = useSession();
@@ -162,20 +164,20 @@ function PortfolioAdd({assets}) {
 
                     <Form.Group controlId="formAssetId">
                         <Form.Label>Instrument</Form.Label>
-                        <Controller as={SecuritiesSearchTypeHead}
+
+                        <SecuritiesSearchTypeHead
                                     id='asset-id'
                                     name='securityId'
-                                    control={control}
                                     options={assets}
                                     defaultValue={0}
                                     isValid={formState.dirtyFields.securityId && !errors.securityId}
-                                    isInvalid={errors.securityId}
-                                    render = { ({onChange, value}) =>
-                                        <SecuritiesSearchTypeHead onChange={onChange} />
-                                    }
+                                    isInvalid={!!errors.securityId}
+                                    setValue={setValue}
+                                    register={register}
+                                    unregister={unregister}
                         >
 
-                        </Controller>
+                        </SecuritiesSearchTypeHead>
 
                     </Form.Group>
 
