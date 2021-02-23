@@ -26,6 +26,7 @@ const tomorrow = new Date(today)
 tomorrow.setDate(tomorrow.getDate() + 1)
 
 const schema = yup.object({
+    securityType: yup.string().required(),
     securityId: yup.number().positive().required(),
     dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
     price: yup.number().required(),
@@ -136,6 +137,8 @@ function PortfolioAdd({assets}) {
     );
 
     const [session, loading] = useSession();
+    const [formLoading, setFormLoading] = useState(false)
+
     console.log(session);
     console.log(assets);
 
@@ -152,7 +155,54 @@ function PortfolioAdd({assets}) {
 
 
     const onSubmit = (data) => {
+
+        data.apiToken = session.user.apiToken
         console.log("Submitted", data)
+
+
+        setFormLoading(true);
+
+        const client = initializeApollo()
+
+        client.mutate({
+            mutation: gql`
+                  mutation addDeal{
+                      addDeal(input:{
+                        type:${data.securityType},
+                        security_id:${data.securityId}
+                        amount:${data.amount}
+                        price:${data.price}
+                        currency:"${data.currency}"
+                        fee:${data.brokerFee}
+                        fee_currency:"${data.currency}"
+                        payload: ${data.payload}
+                      })
+                      {
+                        result
+                        Deal {
+                          id
+                        user_uuid
+                        security_id}
+                      }
+                    }
+        `,
+            variables: {
+                },
+            context: {
+                token: 'Bearer '+ session.user.apiToken
+            }
+        }).then(
+            (res) => {
+                //setOptions(res.data.securities)
+                console.log(res)
+                setFormLoading(false)
+            }
+        )
+
+
+
+
+
     }
 
 
@@ -167,9 +217,14 @@ function PortfolioAdd({assets}) {
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <Form.Group controlId="formAssetType">
                         <Form.Label>Type of Instrument</Form.Label>
-                        <Form.Control as='select' defaultValue='stocks'>
+                        <Form.Control as='select' defaultValue='stocks' name='securityType'
+                                      isInvalid={!!errors.securityType}
+                                      ref = {register}
+                         onChange={ (e) => setValue('securityType', e.target.value,
+                             {shouldValidate: true, shouldDirty: true}) }
+                        >
                             <option key='blankChoice' hidden value>Choose</option>
-                            <option value='stocks'>Stocks</option>
+                            <option value='stock'>Stocks</option>
                             {/*<option>Bonds</option>*/}
                         </Form.Control>
 
@@ -279,6 +334,7 @@ function PortfolioAdd({assets}) {
                     </Form.Group>
 
                     <Button variant="primary" type="submit">Add to Portfolio</Button>
+                    {formLoading && <p>Loading</p>}
 
                 </Form>
 
