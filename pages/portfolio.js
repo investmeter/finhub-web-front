@@ -131,6 +131,7 @@ function PortfolioAdd({assets}) {
 
     const {control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
         {
+            mode:"onChange",
             resolver: yupResolver(schema),
             shouldFocusError: false
         }
