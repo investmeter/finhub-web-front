@@ -176,6 +176,7 @@ function PortfolioAdd({assets}) {
                         security_id:${data.securityId}
                         amount:${data.amount}
                         price:${data.price}
+                        totalPaid:${data.totalPaid}
                         currency:"${data.currency}"
                         fee:${data.brokerFee}
                         fee_currency:"${data.currency}"
