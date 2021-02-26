@@ -160,7 +160,6 @@ function PortfolioAdd({assets}) {
         data.apiToken = session.user.apiToken
         console.log("Submitted", data)
 
-
         setFormLoading(true);
 
         const client = initializeApollo()
@@ -180,11 +179,7 @@ function PortfolioAdd({assets}) {
                         payload: ${data.payload}
                       })
                       {
-                        result
-                        Deal {
-                          id
-                        user_uuid
-                        security_id}
+                           result
                       }
                     }
         `,
@@ -198,12 +193,12 @@ function PortfolioAdd({assets}) {
                 //setOptions(res.data.securities)
                 console.log(res)
                 setFormLoading(false)
+                if (_.get(res,"data.addDeal.result") === 'ok') {
+                    console.log('Deal added OK')
+
+                }
             }
         )
-
-
-
-
 
     }
 
@@ -229,7 +224,6 @@ function PortfolioAdd({assets}) {
                             <option value='stock'>Stocks</option>
                             {/*<option>Bonds</option>*/}
                         </Form.Control>
-
 
                     </Form.Group>
 
