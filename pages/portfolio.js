@@ -29,8 +29,8 @@ const schema = yup.object({
     securityType: yup.string().min(1).ensure().required(),
     securityId: yup.number().positive().required(),
     dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
-    price: yup.number().required(),
-    amount: yup.number().positive(),
+    price: yup.number().required().positive(),
+    amount: yup.number(),
     totalPaid: yup.number(),
     brokerFee: yup.number()
 });
@@ -117,23 +117,23 @@ const RBTDatePicker = (props) => {
         return () => unregister(name);
     }, [name, register, unregister]);
 
-    setValue('dateAdded', startDate,{shouldValidate: true})
+    setValue('dateAdded', startDate, {shouldValidate: true})
 
     return (
         <DatePicker isValid={isValid} isInvalid={isInvalid} selected={startDate} onChange={date => {
             setStartDate(date)
             setValue('dateAdded', date, {shouldDirty: true, shouldValidate: true})
         }}
-                    className={`form-control ${isValid?"is-valid":""} ${isInvalid?"is-invalid":""}`}/>
+                    className={`form-control ${isValid ? "is-valid" : ""} ${isInvalid ? "is-invalid" : ""}`}/>
     )
 }
 
 
 function PortfolioAdd({assets}) {
 
-    const {control, handleSubmit, watch, errors, formState, register, unregister, setValue} = useForm(
+    const {control, handleSubmit, watch, errors, formState, register, unregister, setValue, getValues} = useForm(
         {
-            mode:"onChange",
+            mode: "onChange",
             resolver: yupResolver(schema),
             shouldFocusError: false
         }
@@ -186,17 +186,16 @@ function PortfolioAdd({assets}) {
                       }
                     }
         `,
-            variables: {
-                },
+            variables: {},
             context: {
-                token: 'Bearer '+ session.user.apiToken
+                token: 'Bearer ' + session.user.apiToken
             }
         }).then(
             (res) => {
                 //setOptions(res.data.securities)
                 console.log(res)
                 setFormLoading(false)
-                if (_.get(res,"data.addDeal.result") === 'ok') {
+                if (_.get(res, "data.addDeal.result") === 'ok') {
                     console.log('Deal added OK')
 
                 }
@@ -219,9 +218,9 @@ function PortfolioAdd({assets}) {
                         <Form.Label>Type of Instrument</Form.Label>
                         <Form.Control as='select' defaultValue='' name='securityType'
                                       isInvalid={!!errors.securityType}
-                                      ref = {register}
-                         onChange={ (e) => setValue('securityType', e.target.value,
-                             {shouldValidate: true, shouldDirty: true}) }
+                                      ref={register}
+                                      onChange={(e) => setValue('securityType', e.target.value,
+                                          {shouldValidate: true, shouldDirty: true})}
                         >
                             <option key='blankChoice' hidden value=''>Choose</option>
                             <option value='stock'>Stocks</option>
@@ -253,14 +252,14 @@ function PortfolioAdd({assets}) {
                     <Form.Group controlId="dateAdded">
                         <Form.Label>Date of deal</Form.Label>
                         <Form.Row>
-                            <Col  xs="auto">
+                            <Col xs="auto">
                                 <RBTDatePicker name='dateAdded'
                                                {...{register, unregister, setValue}}
-                                               //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
+                                    //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
                                                isInvalid={!!errors.dateAdded}
                                 />
                             </Col>
-                            <Col  xs="auto">
+                            <Col xs="auto">
                                 <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
                             </Col>
 
@@ -275,8 +274,16 @@ function PortfolioAdd({assets}) {
                                 <Form.Control name="price"
                                               placeholder="Average price of acquired securities"
                                               ref={register}
-                                              //isValid={formState.dirtyFields.price && !errors.price}
-                                              isInvalid={!!errors.price}/>
+                                    //isValid={formState.dirtyFields.price && !errors.price}
+                                              isInvalid={!!errors.price}
+                                              onChange={
+                                                  (e) => {
+                                                      setValue('totalPaid', getValues('amount') * e.target.value, {shouldValidate: true})
+                                                  }
+                                              }
+                                              autoComplete="off"
+
+                                />
                             </Col>
 
                             <Form.Label column>{currency}</Form.Label>
@@ -292,8 +299,14 @@ function PortfolioAdd({assets}) {
                                 <Form.Control placeholder='Number of securities'
                                               name="amount"
                                               ref={register}
-                                              //isValid={formState.dirtyFields.amount && !errors.amount}
+                                    //isValid={formState.dirtyFields.amount && !errors.amount}
                                               isInvalid={!!errors.amount}
+                                              onChange={
+                                                  (e) => {
+                                                      setValue('totalPaid', getValues('price') * e.target.value, {shouldValidate: true})
+                                                  }
+                                              }
+                                              autoComplete="off"
 
                                 />
                             </Col>
@@ -309,8 +322,9 @@ function PortfolioAdd({assets}) {
                                 <Form.Control placeholder="Total paid for securities"
                                               name="totalPaid"
                                               ref={register}
-                                              //isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
+                                    //isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
                                               isInvalid={!!errors.totalPaid}
+                                              autoComplete="off"
                                 />
                             </Col>
                             <Form.Label column>{currency}</Form.Label>
@@ -325,7 +339,7 @@ function PortfolioAdd({assets}) {
                                               name="brokerFee"
                                               defaultValue={0}
                                               ref={register}
-                                              //isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
+                                    //isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
                                               isInvalid={!!errors.brokerFee}
                                 />
                             </Col>
@@ -333,7 +347,7 @@ function PortfolioAdd({assets}) {
                         </Form.Row>
                     </Form.Group>
 
-                    <Button variant="primary" type="submit" disabled={formState.isSubmitting} >Add to Portfolio</Button>
+                    <Button variant="primary" type="submit" disabled={formState.isSubmitting}>Add to Portfolio</Button>
                     {formLoading && <p>Loading</p>}
 
                 </Form>
