@@ -45,7 +45,7 @@ const SecuritiesSearchTypeHead = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
 
-    const {register, unregister, setValue, name} = props
+    const {register, unregister, setValue, setCurrency, name} = props
 
     useEffect(() => {
         register({name});
@@ -64,6 +64,7 @@ const SecuritiesSearchTypeHead = (props) => {
                         value:id
                         company:title
                         ticker
+                        currency
                       }
         }`,
             variables: {
@@ -94,6 +95,7 @@ const SecuritiesSearchTypeHead = (props) => {
                            console.log('Selected', selected);
                            if (selected.length > 0) {
                                setValue(name, selected[0].value, {shouldValidate: true, shouldDirty: true})
+                               setCurrency(selected[0].currency)
                            } else {
                                setValue(name, undefined, {shouldValidate: true, shouldDirty: true})
                            }
@@ -139,6 +141,7 @@ function PortfolioAdd({assets}) {
 
     const [session, loading] = useSession();
     const [formLoading, setFormLoading] = useState(false)
+    const [currency, setCurrency] = useState()
 
     console.log(session);
     console.log(assets);
@@ -240,6 +243,7 @@ function PortfolioAdd({assets}) {
                             setValue={setValue}
                             register={register}
                             unregister={unregister}
+                            setCurrency={setCurrency}
                         >
 
                         </SecuritiesSearchTypeHead>
@@ -275,7 +279,7 @@ function PortfolioAdd({assets}) {
                                               isInvalid={!!errors.price}/>
                             </Col>
 
-                            <Form.Label column>USD</Form.Label>
+                            <Form.Label column>{currency}</Form.Label>
                         </Form.Row>
                     </Form.Group>
 
@@ -309,7 +313,7 @@ function PortfolioAdd({assets}) {
                                               isInvalid={!!errors.totalPaid}
                                 />
                             </Col>
-                            <Form.Label column>USD</Form.Label>
+                            <Form.Label column>{currency}</Form.Label>
                         </Form.Row>
                     </Form.Group>
 
@@ -325,11 +329,11 @@ function PortfolioAdd({assets}) {
                                               isInvalid={!!errors.brokerFee}
                                 />
                             </Col>
-                            <Form.Label column>USD</Form.Label>
+                            <Form.Label column>{currency}</Form.Label>
                         </Form.Row>
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">Add to Portfolio</Button>
+                    <Button variant="primary" type="submit" disabled={formState.isSubmitting} >Add to Portfolio</Button>
                     {formLoading && <p>Loading</p>}
 
                 </Form>
