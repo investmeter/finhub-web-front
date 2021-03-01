@@ -3,7 +3,7 @@ import {Col, Container, Form, Row} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 import React, {useEffect, useState} from 'react';
-import Layout from '../components/layout';
+import Layout from '../../components/layout';
 
 import {useSession} from 'next-auth/client'
 import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
@@ -17,7 +17,7 @@ import * as yup from 'yup'
 
 import {gql} from '@apollo/client';
 
-import {initializeApollo} from '../lib/apolloClient'
+import {initializeApollo} from '../../lib/apolloClient'
 import * as _ from 'lodash'
 
 

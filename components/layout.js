@@ -67,7 +67,7 @@ export default function Layout({isProtected, children, userEmail, isSession}) {
 
         </Navbar>
 
-        <main>
+        <main >
             {isProtected && !isSession &&
                 <Container>
                     <Row>&nbsp;</Row>
@@ -78,7 +78,10 @@ export default function Layout({isProtected, children, userEmail, isSession}) {
             }
 
             {((!!!isProtected) || (!!isProtected && !!isSession)) &&
-              children
+            <Container>
+                <Row>&nbsp;</Row>
+                {children}
+            </Container>
             }
 
         </main>
