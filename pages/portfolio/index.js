@@ -1,7 +1,7 @@
 import {Button, Col, Container, Modal, Row, Table} from 'react-bootstrap';
 import Layout from '../../components/layout';
 import {useSession} from 'next-auth/client'
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import PortfolioItemForm from "../../components/portfolio_item_form"
 import * as _ from "lodash";
 import {initializeApollo} from "../../lib/apolloClient";
@@ -31,7 +31,8 @@ async function fetchPortfolio(userUuid,session){
         },
         context: {
             token: 'Bearer ' + session.user.apiToken
-        }
+        },
+        fetchPolicy: "no-cache"
     }).then(
         (res) => {
             console.log('data fetched')
@@ -45,14 +46,20 @@ function PortFolio({session, doUpdate, setDoUpdate}){
 
     const [portfolio, setPortfolio] = useState([])
 
-    if (doUpdate)
-    {
-            fetchPortfolio(session.user.uuid, session).then( (data) => {
-            setPortfolio(data)
-             setDoUpdate(false)
-            }
-        )
-    }
+    useEffect( () => {
+
+        if (doUpdate) {
+            setDoUpdate(false)
+            console.log("updating.... ")
+
+            fetchPortfolio(session.user.uuid, session).then((data) => {
+                console.log(data)
+                setPortfolio(data)
+
+                }
+            )
+        }
+    })
 
     return (
         <Table>
@@ -106,7 +113,9 @@ export default function PortfolioHome() {
                 userEmail={session && session.user.email} loading={loading}>
 
             <h1 className="header">Portfolio</h1>
+            <p>&nbsp;</p>
             <Button onClick={handleShow}>Add</Button>
+            <p>&nbsp;</p>
             {session && <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
 
             }
