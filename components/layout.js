@@ -9,7 +9,7 @@ import react from 'react';
 import { useRouter } from 'next/router'
 
 
-export default function Layout({isProtected, children, userEmail, isSession}) {
+export default function Layout({isProtected, children, userEmail, isSession, loading}) {
 
     const noBulletsList= {listStyleType: "none"};
 
@@ -68,7 +68,7 @@ export default function Layout({isProtected, children, userEmail, isSession}) {
         </Navbar>
 
         <main >
-            {isProtected && !isSession &&
+            {isProtected && !isSession && !loading &&
                 <Container>
                     <Row>&nbsp;</Row>
                     <h1>Session Expired</h1>
