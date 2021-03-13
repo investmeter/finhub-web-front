@@ -1,5 +1,5 @@
 // import styles from '../styles/Home.module.css'
-import {Col, Container, Form, Row} from 'react-bootstrap';
+import {Col, Container, Form, Row, Alert} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 import React, {useEffect, useState} from 'react';
@@ -127,8 +127,22 @@ const RBTDatePicker = (props) => {
     )
 }
 
+function AlertFormError({show, setShow}) {
+//    const [show, setShow] = useState(show);
 
-function PortfolioItemForm({assets}) {
+    if (show) {
+        return (
+            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+            </Alert>
+        )
+    }
+
+    return null
+}
+
+
+function PortfolioItemForm({assets, setFormState}) {
 
     const {control, handleSubmit, watch, errors, formState, register, unregister, setValue, getValues} = useForm(
         {
@@ -141,6 +155,9 @@ function PortfolioItemForm({assets}) {
     const [session, loading] = useSession();
     const [formLoading, setFormLoading] = useState(false)
     const [currency, setCurrency] = useState()
+
+    const [errorAlertShow, setErrorAlertShow] = useState(false)
+
 
     console.log(session);
     console.log(assets);
@@ -195,10 +212,16 @@ function PortfolioItemForm({assets}) {
                 setFormLoading(false)
                 if (_.get(res, "data.addDeal.result") === 'ok') {
                     console.log('Deal added OK')
-
+                    setFormState('ADDED_OK')
                 }
             }
-        )
+            )
+            .catch( (e) => {
+                console.log("FORM_ERROR")
+                console.log(e)
+                setErrorAlertShow(true)
+//                setFormState('ERROR_FORM_ADD_ITEM')
+            } )
 
     }
 
@@ -206,6 +229,8 @@ function PortfolioItemForm({assets}) {
     return (
 
             <Container>
+                <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/>
+
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <Form.Group controlId="formAssetType">
                         <Form.Label>Type of Instrument</Form.Label>
