@@ -65,6 +65,7 @@ function PortFolio({session, doUpdate, setDoUpdate}){
         <Table>
             <thead>
             <tr>
+                <th>&nbsp;</th>
                 <th>Ticker</th>
                 <th>Asset</th>
                 <th>Amount</th>
@@ -76,6 +77,14 @@ function PortFolio({session, doUpdate, setDoUpdate}){
             {portfolio.length > 0  && portfolio.map( (item, i) => {
 
                 return (<tr key={i}>
+                    <td><img width={36} height={36}
+                             src={`https://yastatic.net/s3/fintech-icons/1/i/${item.asset.ticker}.svg`}
+                             onError={
+                                 (e)=>{
+                                 e.target.onerror=null;
+                                 e.target.src=`https://eu.ui-avatars.com/api/?rounded=true&background=007BFF&color=ffffff&font-size=0.33&length=4&name=${item.asset.ticker}`}}
+                    />
+                    </td>
                     <td>{item.asset.ticker}</td>
                     <td>{item.asset.title}</td>
                     <td>{item.amount}</td>
