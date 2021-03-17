@@ -60,7 +60,11 @@ function PortFolio({session, doUpdate, setDoUpdate}){
             )
         }
     })
-
+    const dateConv = new Intl.DateTimeFormat('default', {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour12: false
+    })
     return (
         <Table>
             <thead>
@@ -88,7 +92,7 @@ function PortFolio({session, doUpdate, setDoUpdate}){
                     <td>{item.asset.ticker}</td>
                     <td>{item.asset.title}</td>
                     <td>{item.amount}</td>
-                    <td>{item.last_deal_timestamp}</td>
+                    <td>{dateConv.format(new Date(item.last_deal_timestamp))}</td>
                 </tr>)
             } )}
             </tbody>
