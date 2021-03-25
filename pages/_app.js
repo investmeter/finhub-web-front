@@ -1,6 +1,8 @@
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../lib/apolloClient';

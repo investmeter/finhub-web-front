@@ -84,7 +84,7 @@ const options = {
         session: async (session, user) => {
             //session.foo = 'bar' // Add property to session
             console.log("Session's user", user)
-            // session.user.uuid = user.user_uuid
+            session.user.uuid = user.user_uuid
             session.user.apiToken = user.apiToken
             console.log("Session " , session)
             // console.log("User " , user)
