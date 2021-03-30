@@ -16,14 +16,17 @@ async function fetchPortfolio(userUuid,session){
     return client.query({
         query: gql`query userPortfolio($user_uuid:String){
                       userPortfolio(user_uuid: $user_uuid) {
-                      last_deal_timestamp
-                      asset{
-                          id
-                          title
-                          ticker
-                          currency
-                      }
-                    amount
+                      error 
+                      portfolioAssets {
+                          last_deal_timestamp
+                          asset{
+                              id
+                              title
+                              ticker
+                              currency
+                          }
+                        amount
+                        }
                     }
         }`,
         variables: {
@@ -36,7 +39,7 @@ async function fetchPortfolio(userUuid,session){
     }).then(
         (res) => {
             console.log('data fetched')
-            return res.data.userPortfolio
+            return res.data.userPortfolio.portfolioAssets
         }
     )
 
