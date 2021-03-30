@@ -29,7 +29,7 @@ const schema = yup.object({
     securityId: yup.number().positive().required(),
     dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
     price: yup.number().required().positive(),
-    amount: yup.number(),
+    amount: yup.number().max(Math.pow(2,50),"Number is too big"),
     totalPaid: yup.number(),
     brokerFee: yup.number()
 });
@@ -197,7 +197,7 @@ function PortfolioItemForm({assets, setFormState}) {
                         payload: ${data.payload}
                       })
                       {
-                           result
+                           error
                       }
                     }
         `,
@@ -210,7 +210,7 @@ function PortfolioItemForm({assets, setFormState}) {
                 //setOptions(res.data.securities)
                 console.log(res)
                 setFormLoading(false)
-                if (_.get(res, "data.addDeal.result") === 'ok') {
+                if (_.get(res, "data.addDeal.error") === '') {
                     console.log('Deal added OK')
                     setFormState('ADDED_OK')
                 }
