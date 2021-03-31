@@ -68,6 +68,11 @@ export default function Layout({isProtected, children, userEmail, isSession, loa
         </Navbar>
 
         <main >
+
+            {!!loading &&
+                <div>Please wait....</div>
+            }
+
             {isProtected && !isSession && !loading &&
                 <Container>
                     <Row>&nbsp;</Row>
@@ -77,7 +82,9 @@ export default function Layout({isProtected, children, userEmail, isSession, loa
                 </Container>
             }
 
-            {((!!!isProtected) || (!!isProtected && !!isSession)) &&
+            {((!!!isProtected) || (!!isProtected && !!isSession)) && (!loading) &&
+            // !!session.user &&
+
             <Container>
                 <Row>&nbsp;</Row>
                 {children}
