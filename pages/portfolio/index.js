@@ -92,7 +92,7 @@ function PortFolio({session, doUpdate, setDoUpdate}){
                                  e.target.src=`https://eu.ui-avatars.com/api/?rounded=true&background=007BFF&color=ffffff&font-size=0.33&length=4&name=${item.asset.ticker}`}}
                     />
                     </td>
-                    <td>{item.asset.ticker}</td>
+                    <td><Link href={`/portfolio/deals?asset=${item.asset.id}`} >{item.asset.ticker}</Link></td>
                     <td>{item.asset.title}</td>
                     <td>{item.amount}</td>
                     <td>{dateConv.format(new Date(item.last_deal_timestamp))}</td>
