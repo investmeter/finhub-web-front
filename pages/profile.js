@@ -17,6 +17,7 @@ export default function Profile({isSession, userEmail}) {
 
     const [session, loading] =  useSession()
 
+
     if (loading){
         return (
             <Layout>
@@ -33,6 +34,7 @@ export default function Profile({isSession, userEmail}) {
                     <Row>&nbsp;</Row>
                     <h1> Profile </h1>
                     <h2>Email from session: {_.get(session, 'user.email')}</h2>
+                    {/*<h2>Email from server : {userEmail}</h2>*/}
                 </Container>
 
             </Layout>
@@ -50,7 +52,8 @@ export async function getServerSideProps({req, res}) {
     return {
         props: {
             isSession: !!session,
-            userEmail : !!session && _.get(session, "user.email")
+            userEmail : !!session && _.get(session, "user.email"),
+            session: session
         }, // will be passed to the page component as props
     }
 }
