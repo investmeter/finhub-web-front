@@ -1,5 +1,5 @@
 import {useRouter} from 'next/router'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useSession} from 'next-auth/client'
 import {gql, useQuery} from '@apollo/client';
 import * as _ from 'lodash'
@@ -9,7 +9,7 @@ import { ApolloProvider } from '@apollo/client';
 import {Table} from "react-bootstrap";
 import Link from "next/link";
 
-function DealList({userUuid, token}) {
+function DealList({userUuid, token, asset, setAssetTitle}) {
 
     const REQ = gql`
        query userDeals($user_uuid:String, $security_id:Int){
@@ -38,8 +38,16 @@ function DealList({userUuid, token}) {
                 token: 'Bearer ' + token
         },
         variables: {
-            "user_uuid": userUuid
+            "user_uuid": userUuid,
+            "security_id": Number.parseInt(asset)
         }
+    })
+
+    useEffect( ()=>{
+        console.log("Data in Effect", data)
+        if (asset && loadingData) setAssetTitle("L O A D I N G")
+        if (asset && _.get(data,"userDeals.deals")) setAssetTitle(_.get(data, "userDeals.deals")[0].asset.ticker)
+
     })
 
     console.log("Data ", data)
@@ -64,6 +72,7 @@ function DealList({userUuid, token}) {
             </thead>
             <tbody>
             {!loadingData && _.get(data, "userDeals.deals") &&
+
             data.userDeals.deals.map((deal, i) => {
                 return (
                     <tr key={i}>
@@ -84,21 +93,28 @@ function DealList({userUuid, token}) {
 
 export default function PortfolioDeals() {
     const [session, loading] = useSession()
-
+    const [assetTitle, setAssetTitle] = useState("")
 
     const router = useRouter()
-    const {ticker} = router.query
+    const {asset} = router.query
 
     return (
         <Layout isSession={!!_.get(session, 'user.apiToken')} isProtected={true}
                 userEmail={session && session.user.email} loading={loading} session={session}>
-            <h1 className="header">Deal list for Portfolio</h1>
+            {!assetTitle &&
+                <h1 className="header">Deal list for Portfolio</h1>
+            }
+            {assetTitle &&
+                <h1 className="header">Deal list for {assetTitle}</h1>
+            }
             <p>&nbsp;</p>
             <Link  href="/portfolio"> &lt;&lt; back to Portfolio</Link>
             <p>&nbsp;</p>
 
             <DealList userUuid={_.get(session,"user.uuid", false)}
-                      token={_.get(session,"user.apiToken")}/>
+                      asset={asset}
+                      token={_.get(session,"user.apiToken")}
+                        setAssetTitle={setAssetTitle}/>
 
         </Layout>
     )
