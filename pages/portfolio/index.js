@@ -7,7 +7,7 @@ import * as _ from "lodash";
 import {initializeApollo} from "../../lib/apolloClient";
 import {gql} from "@apollo/client";
 import portfolio from "./portfolio";
-
+import Link from "next/link"
 
 async function fetchPortfolio(userUuid,session){
     console.log("Fetching portfolio...")
@@ -130,7 +130,7 @@ export default function PortfolioHome() {
 
             <h1 className="header">Portfolio</h1>
             <p>&nbsp;</p>
-            <Button onClick={handleShow}>Add</Button>
+            <Button onClick={handleShow}>Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
             <p>&nbsp;</p>
             {session && <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
 
