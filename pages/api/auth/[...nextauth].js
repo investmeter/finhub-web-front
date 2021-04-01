@@ -119,7 +119,7 @@ const options = {
                          else {
                              console.log('Api key expired')
                              token.apiToken = null
-                             return Promise.resolve(token)
+                             return Promise.reject('Session expired')
                          }
 
                      }
