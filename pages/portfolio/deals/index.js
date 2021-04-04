@@ -65,6 +65,14 @@ function DealList({userUuid, asset, setAssetTitle}) {
 
     const REQ = gql`
        query userDeals($user_uuid:String, $security_id:Int){
+          assetInfo(asset_id:$security_id){
+            error
+            asset{
+                ticker
+                title
+            }
+          }  
+       
          userDeals(user_uuid:$user_uuid, security_id:$security_id){
             error 
             deals{
@@ -87,23 +95,22 @@ function DealList({userUuid, asset, setAssetTitle}) {
     if (!userUuid || !token) return null;
 
     const {loadingData, error, data, refetch} = useQuery(REQ, {
-        context: {
-            token: 'Bearer ' + token
-        },
-        variables: {
-            "user_uuid": userUuid,
-            "security_id": Number.parseInt(asset)
-        },
-        pollInterval: 2,
+                    context: {
+                        token: 'Bearer ' + token
+                    },
+                    variables: {
+                        "user_uuid": userUuid,
+                        "security_id": Number.parseInt(asset)
+                    },
+                    pollInterval: 2000,
+                })
 
-    })
 
-    useEffect(() => {
-        console.log("Data in Effect", data)
-        if (asset && loadingData) setAssetTitle("L O A D I N G")
-        if (asset && _.get(data, "userDeals.deals")) setAssetTitle(_.get(data, "userDeals.deals")[0].asset.ticker)
+    if (loadingData)  {
+        return null
+    }
 
-    })
+    setAssetTitle(_.get(data, "assetInfo.asset.ticker"))
 
     console.log("Data ", data)
 
@@ -204,10 +211,10 @@ export default function PortfolioDeals()
     return (
         <Layout isSession={!!_.get(session, 'user.apiToken')} isProtected={true}
                 userEmail={session && session.user.email} loading={loading}>
-            {!assetTitle &&
+            {!asset &&
             <h1 className="header">Deal list for Portfolio</h1>
             }
-            {assetTitle &&
+            {asset &&
             <h1 className="header">Deal list for {assetTitle}</h1>
             }
             <p>&nbsp;</p>
