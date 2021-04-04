@@ -20,6 +20,8 @@ function DealList({userUuid, asset, setAssetTitle}) {
 
     function deleteDealGql(dealId) {
         console.log("Starting delete deal...", dealId)
+        setModalState('dealDelete')
+
         const client = initializeApollo()
         const REQ = gql`
             mutation deleteDeal($deal_id:Int){
@@ -52,8 +54,8 @@ function DealList({userUuid, asset, setAssetTitle}) {
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const handleClose = () => {setShow(false);}
+    const handleShow = () => {setModalState(""); setShow(true) }
 
     const [dealId, setDealId] = useState()
     const [modalState, setModalState] = useState("")
@@ -146,29 +148,38 @@ function DealList({userUuid, asset, setAssetTitle}) {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Realy Delete?</Modal.Title>
+                    <Modal.Title>Really Delete?</Modal.Title>
                 </Modal.Header>
-                {modalState !== 'dealResult' &&
+                {modalState === '' &&
                 <>
                     <Modal.Body>You could restore deal from archive later</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={() => {
-                            deleteDealGql(dealId)
-                        }}>
-                            Ok
+                        <Button variant="primary" variant="danger" onClick={() => {deleteDealGql(dealId)}}>
+                            Delete
                         </Button>
                     </Modal.Footer>
                 </>
                 }
+
+                {modalState === 'dealDelete' &&
+                <>
+                    <Modal.Body> Please wait.. </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" disabled >Cancel</Button>
+                        <Button variant="primary" disabled variant="danger" >Delete</Button>
+                    </Modal.Footer>
+                </>
+                }
+
                 {modalState === 'dealResult' &&
                 <>
                     <Modal.Body> Deal {dealId} has been deleted! </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
+                        <Button variant="primary" onClick={handleClose}>
+                            Ok
                         </Button>
                     </Modal.Footer>
                 </>
