@@ -41,12 +41,12 @@ function DealList({userUuid, asset, setAssetTitle}) {
             context: {
                 token: 'Bearer ' + session.user.apiToken
             },
+
         }).then((result) => {
             console.log(result)
+            refetch().then()
             setModalState('dealResult')
         })
-
-
     }
 
 
@@ -86,14 +86,16 @@ function DealList({userUuid, asset, setAssetTitle}) {
     `
     if (!userUuid || !token) return null;
 
-    const {loadingData, error, data} = useQuery(REQ, {
+    const {loadingData, error, data, refetch} = useQuery(REQ, {
         context: {
             token: 'Bearer ' + token
         },
         variables: {
             "user_uuid": userUuid,
             "security_id": Number.parseInt(asset)
-        }
+        },
+        pollInterval: 2,
+
     })
 
     useEffect(() => {
