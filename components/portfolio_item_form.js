@@ -25,7 +25,7 @@ const tomorrow = new Date(today)
 tomorrow.setDate(tomorrow.getDate() + 1)
 
 const schema = yup.object({
-    securityType: yup.string().min(1).ensure().required(),
+    // securityType: yup.string().min(1).ensure().required(),
     securityId: yup.number().positive().required(),
     dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
     price: yup.number().required().positive(),
@@ -186,7 +186,7 @@ function PortfolioItemForm({assets, setFormState}) {
                   mutation addDeal{
                       addDeal(input:{
                         deal_timestamp:"${data.dateAdded.toISOString()}"
-                        type:${data.securityType},
+                        # type:${data.securityType},
                         security_id:${data.securityId}
                         amount:${data.amount}
                         price:${data.price}
@@ -232,20 +232,20 @@ function PortfolioItemForm({assets, setFormState}) {
                 <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/>
 
                 <Form onSubmit={handleSubmit(onSubmit)}>
-                    <Form.Group controlId="formAssetType">
-                        <Form.Label>Type of Instrument</Form.Label>
-                        <Form.Control as='select' defaultValue='' name='securityType'
-                                      isInvalid={!!errors.securityType}
-                                      ref={register}
-                                      onChange={(e) => setValue('securityType', e.target.value,
-                                          {shouldValidate: true, shouldDirty: true})}
-                        >
-                            <option key='blankChoice' hidden value=''>Choose</option>
-                            <option value='stock'>Stocks</option>
-                            {/*<option>Bonds</option>*/}
-                        </Form.Control>
+                    {/*<Form.Group controlId="formAssetType">*/}
+                    {/*    <Form.Label>Type of Instrument</Form.Label>*/}
+                    {/*    <Form.Control as='select' defaultValue='' name='securityType'*/}
+                    {/*                  isInvalid={!!errors.securityType}*/}
+                    {/*                  ref={register}*/}
+                    {/*                  onChange={(e) => setValue('securityType', e.target.value,*/}
+                    {/*                      {shouldValidate: true, shouldDirty: true})}*/}
+                    {/*    >*/}
+                    {/*        <option key='blankChoice' hidden value=''>Choose</option>*/}
+                    {/*        <option value='stock'>Stocks</option>*/}
+                    {/*        /!*<option>Bonds</option>*!/*/}
+                    {/*    </Form.Control>*/}
 
-                    </Form.Group>
+                    {/*</Form.Group>*/}
 
                     <Form.Group controlId="formAssetId">
                         <Form.Label>Instrument</Form.Label>
