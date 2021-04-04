@@ -69,7 +69,7 @@ function PortFolio({session, doUpdate, setDoUpdate}){
             hour12: false
     })
     return (
-        <Table>
+        <Table style={{width:"100%", border:1}}>
             <thead>
             <tr>
                 <th>&nbsp;</th>
@@ -132,8 +132,8 @@ export default function PortfolioHome() {
             <p>&nbsp;</p>
             <Button onClick={handleShow}>Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
             <p>&nbsp;</p>
-            {session && <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
-
+            {session &&
+                <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
             }
 
             <Modal show={show} onHide={handleClose} backdrop="static">
@@ -170,6 +170,7 @@ export default function PortfolioHome() {
                     }
                 </Modal.Body>
             </Modal>
+
         </Layout>
     )
 }
