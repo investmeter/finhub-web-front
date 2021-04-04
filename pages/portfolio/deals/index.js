@@ -60,6 +60,11 @@ function DealList({userUuid, asset, setAssetTitle}) {
     const [dealId, setDealId] = useState()
     const [modalState, setModalState] = useState("")
 
+    useEffect( ()=>{
+            setAssetTitle(_.get(data, "assetInfo.asset.ticker"))
+        }
+    )
+
 
     const token = _.get(session, "user.apiToken")
 
@@ -110,7 +115,7 @@ function DealList({userUuid, asset, setAssetTitle}) {
         return null
     }
 
-    setAssetTitle(_.get(data, "assetInfo.asset.ticker"))
+
 
     console.log("Data ", data)
 
@@ -224,7 +229,6 @@ export default function PortfolioDeals()
 
             <DealList userUuid={_.get(session, "user.uuid", false)}
                       asset={asset}
-                // token={_.get(session,"user.apiToken")}
                       setAssetTitle={setAssetTitle}/>
 
         </Layout>
