@@ -39,6 +39,37 @@ export default function PortfolioManage() {
 
     const onSubmit = (data) => {
         console.log('Submitted', data)
+        const client = initializeApollo()
+
+        client.mutate({
+                mutation: gql`
+                    mutation addUserPortfolio($user_portfolio:UserPortfolioInput){
+                        addUserPortfolio(user_portfolio:$user_portfolio){
+                            error
+                            userPortfolio{
+                                id
+                                timestamp_created
+                                title
+                                description
+                                icon_url
+                           }
+                       }
+            }`,
+                variables: {
+                    user_portfolio: {
+                         timestamp_created: Date.now().toString(),
+                         title: data.portfolioTitle,
+                         description: data.portfolioDescription,
+                         icon_url: data.portfolioIconUrl
+                    }
+                },
+            context:{
+                    token: `Bearer ${session.user.apiToken}`
+                }
+            }
+        ).then((res) => {
+            console.log(res)
+        }).catch((e) => console.log('Error', e))
     }
 
     const watchPortfolioTitle = watch("portfolioTitle")
