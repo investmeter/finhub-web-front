@@ -4,13 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Layout from '../../components/layout';
 
 import {signIn, signOut, useSession} from 'next-auth/client'
-import React from "react";
+import {useState} from "react";
 import * as _ from "lodash";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {initializeApollo} from "../../lib/apolloClient";
 import {gql} from "@apollo/client";
+import {useRouter} from "next/router";
 
 function PortfolioIconImage({title, setValue, ...props}) {
     const imgSrc = `https://eu.ui-avatars.com/api/?rounded=false&background=007BFF&color=ffffff&font-size=0.33&length=2&name=${title}`
@@ -69,6 +70,8 @@ export default function PortfolioManage() {
             }
         ).then((res) => {
             console.log(res)
+            setPageState('portfolioCreated')
+
         }).catch((e) => console.log('Error', e))
     }
 
@@ -76,6 +79,11 @@ export default function PortfolioManage() {
 
     // should register variable because dont have input for it
     register('portfolioIconUrl')
+    const [pageState, setPageState] = useState('form')
+
+    const router = useRouter()
+
+
 
     return (
         <Layout isSession={!!_.get(session, 'user.apiToken')} userEmail={session && session.user.email}
@@ -84,33 +92,47 @@ export default function PortfolioManage() {
             <h1 className="header">Create Portfolio</h1>
             <p>&nbsp;</p>
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Media>
-                    <PortfolioIconImage width={64} height={64} className="mr-4"
-                         title={watchPortfolioTitle} setValue={(src) => { setValue('portfolioIconUrl',src) }}/>
+            {pageState === 'form' &&
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Media>
+                        <PortfolioIconImage width={64} height={64} className="mr-4"
+                                            title={watchPortfolioTitle} setValue={(src) => {
+                            setValue('portfolioIconUrl', src)
+                        }}/>
 
-                    <Media.Body>
-                        <>
-                            <Form.Group>
-                                <Form.Label>Title</Form.Label>
-                                <Form.Control name='portfolioTitle'
-                                              placeholder="Name of portfolio"
-                                              isInvalid={!!errors.portfolioTitle}
-                                              ref={register}
-                                />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control name='portfolioDescription' as={"textarea"} rows={3}  ref={register}/>
-                            </Form.Group>
+                        <Media.Body>
+                            <>
+                                <Form.Group>
+                                    <Form.Label>Title</Form.Label>
+                                    <Form.Control name='portfolioTitle'
+                                                  placeholder="Name of portfolio"
+                                                  isInvalid={!!errors.portfolioTitle}
+                                                  ref={register}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control name='portfolioDescription' as={"textarea"} rows={3} ref={register}/>
+                                </Form.Group>
 
-                        </>
-                        <Button variant='primary' type='submit' disabled={formState.isSubmitting} >Create Portfolio</Button>
-                    </Media.Body>
-                </Media>
+                            </>
+                            <Button variant='primary' type='submit' disabled={formState.isSubmitting}>Create
+                                Portfolio</Button>
+                        </Media.Body>
+                    </Media>
 
 
-            </Form>
+                </Form>
+                }
+            {pageState === 'portfolioCreated' &&
+                <div>
+                    <h2>Portfolio created</h2>
+
+                    <Button onClick={()=>{router.push('add')}}>Add one more</Button>
+
+                </div>
+
+            }
 
         </Layout>
 
