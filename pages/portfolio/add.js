@@ -126,9 +126,11 @@ export default function PortfolioManage() {
                 }
             {pageState === 'portfolioCreated' &&
                 <div>
-                    <h2>Portfolio created</h2>
+                    <h2>Done! Portfolio created</h2>
+                    <p>Now you could fill your portfolio with deals</p>
 
-                    <Button onClick={()=>{router.push('add')}}>Add one more</Button>
+                    <Button onClick={()=>{router.push('deals')}}>Add deals</Button> <br/>
+                    <Button onClick={()=>{router.push('/portfolio')}}>Browse Portfolios</Button> <br/>
 
                 </div>
 

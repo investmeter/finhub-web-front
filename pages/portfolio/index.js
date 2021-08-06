@@ -6,7 +6,6 @@ import PortfolioItemForm from "../../components/portfolio_item_form"
 import * as _ from "lodash";
 import {initializeApollo} from "../../lib/apolloClient";
 import {gql} from "@apollo/client";
-import portfolio from "./portfolio";
 import Link from "next/link"
 
 async function fetchPortfolio(userUuid,session){
