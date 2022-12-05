@@ -1,6 +1,6 @@
 import {Button, Col, Container, Modal, Row, Table} from 'react-bootstrap';
 import Layout from '../../components/layout';
-import {useSession} from 'next-auth/client'
+import useSession from 'next-auth/react'
 import React, {useState, useEffect} from "react";
 import PortfolioItemForm from "../../components/portfolio_item_form"
 import * as _ from "lodash";
@@ -104,13 +104,12 @@ function PortFolio({session, doUpdate, setDoUpdate}){
 }
 
 export default function PortfolioHome() {
-    const [session, loading] = useSession()
-
     const [show, setShow] = useState(false)
     const [formState, setFormState] = useState('INIT')
 
     const [doUpdate, setDoUpdate] = useState(true)
-
+    const { data: session } = useSession()
+    console.log("Session", session)
     const handleClose = () => {
 
         setShow(false)
@@ -124,13 +123,10 @@ export default function PortfolioHome() {
 
 
     return (
-        <Layout isSession={!!_.get(session, 'user.apiToken')} isProtected={true}
-                userEmail={session && session.user.email} loading={loading}>
+        <Layout session={session}>
 
-            <h1 className="header">Portfolio</h1>
-            <p>&nbsp;</p>
             <Button onClick={handleShow}>Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
-            <p>&nbsp;</p>
+
             {session &&
                 <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
             }

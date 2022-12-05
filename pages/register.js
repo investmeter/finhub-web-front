@@ -1,15 +1,13 @@
 import Head from 'next/head'
 // import styles from '../styles/Home.module.css'
 import {Navbar, Nav, NavDropdown, Form, Modal} from "react-bootstrap";
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Toast from 'react-bootstrap/Toast';
 import {Container, Row, Col} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 import react, {useEffect, useState} from 'react';
 import Layout from '../components/layout';
 
-import {signIn, signOut, useSession} from 'next-auth/client'
+import {signIn, signOut, useSession} from 'next-auth/react'
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -70,7 +68,7 @@ export default function Register() {
     const [registrationFormState,setRegistrationFormState ]=useState();
     const [showErrorWindow, setShowErrorWindow] = useState(true);
 
-    const [session, loading] = useSession();
+    const {data:session} = useSession();
 
     const { control, handleSubmit, watch, errors, formState } = useForm({
         mode:"onChange",
@@ -145,14 +143,14 @@ export default function Register() {
                                         control={control}
                                         defaultValue=""
                                         isValid={formState.dirtyFields.userEmail && !errors.userEmail}
-                                        isInvalid={errors.userEmail}
+                                        isInvalid={!!errors && errors.userEmail}
                                         cntx={formState}
                             />
-                            <Form.Text className="text-muted">
+                            <Form.Text >
                                 Unique username to identify yourself
                             </Form.Text>
                             <Form.Control.Feedback type="invalid">
-                                {errors.userName && <span>Please provide correct email</span>}
+                                { !!errors && errors.userEmail && <span>Please provide correct email</span>}
                             </Form.Control.Feedback>
 
                         </Form.Group>
@@ -166,11 +164,11 @@ export default function Register() {
                                         name="password"
                                         control={control}
                                         defaultValue=""
-                                        isValid={formState.dirtyFields.password && !errors.password}
-                                        isInvalid={errors.password}
+                                        isValid={formState.dirtyFields.password && !!errors &&  !errors.password}
+                                        isInvalid={!!errors && errors.password}
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.password && <span>Please set password.</span>}
+                                {!!errors && errors.password && <span>Please set password.</span>}
                             </Form.Control.Feedback>
 
                         </Form.Group>
@@ -184,10 +182,10 @@ export default function Register() {
                                         control={control}
                                         defaultValue=""
                                         isValid={formState.dirtyFields.repeatPassword && !errors.repeatPassword}
-                                        isInvalid={errors.repeatPassword}
+                                        isInvalid={!!errors && errors.repeatPassword}
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.repeatPassword && <span>Should mathc the password</span>}
+                                {!!errors && errors.repeatPassword && <span>Should match the password</span>}
                             </Form.Control.Feedback>
 
                         </Form.Group>

@@ -1,15 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
-import {signIn, signOut} from 'next-auth/client'
-
-import react from 'react';
+import {signIn, signOut} from 'next-auth/react'
 
 
 import { useRouter } from 'next/router'
 
 
-export default function Layout({isProtected, children, userEmail, isSession, loading}) {
+export default function Layout({isProtected = false, children = {}, userEmail="", isSession=false, loading=false}) {
 
     const noBulletsList= {listStyleType: "none"};
 
@@ -27,17 +25,15 @@ export default function Layout({isProtected, children, userEmail, isSession, loa
             <link rel="icon" href="/favicon.ico"/>
         </Head>
         <Navbar variant="dark" bg="primary">
+            <Container>
             <Navbar.Brand href="#home">FinHub</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
+                <Nav className="me-auto">
                     <Nav.Link  onClick= {function (e){e.preventDefault(); router.push('/')}} href="/">Home</Nav.Link>
                     {/*<Nav.Link  onClick={(e) => {e.preventDefault();router.push('/portfolio')}} href="/portfolio">Portfolio</Nav.Link>*/}
-
-                    <Link href="/portfolio" passHref>
-                        <Nav.Link as="a"  >Portfolio</Nav.Link>
-                    </Link>
-
+                    
+                    <Nav.Link as="a" href="/portfolio" >Portfolio</Nav.Link>
 
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -64,7 +60,7 @@ export default function Layout({isProtected, children, userEmail, isSession, loa
 
             </Navbar.Collapse>
 
-
+            </Container>       
         </Navbar>
 
         <main >
@@ -77,7 +73,7 @@ export default function Layout({isProtected, children, userEmail, isSession, loa
                 <Container>
                     <Row>&nbsp;</Row>
                     <h1>Session Expired</h1>
-                    <h2>Please <Link onClick={signIn} href="/auth/credentials-signin"><a href="/auth/credentials-signin" style={{textDecoration:'underline'}}>sign-in</a></Link></h2>
+                    <h2>Please <Link onClick={signIn} href="/auth/credentials-signin"><a href="/auth/credentials-signin">sign-in</a></Link></h2>
 
                 </Container>
             }

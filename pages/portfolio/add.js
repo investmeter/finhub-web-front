@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 
 import Layout from '../../components/layout';
 
-import {signIn, signOut, useSession} from 'next-auth/client'
+import {signIn, signOut, useSession} from 'next-auth/react'
 import {useState} from "react";
 import * as _ from "lodash";
 import {useForm} from "react-hook-form";

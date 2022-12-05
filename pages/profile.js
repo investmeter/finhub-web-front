@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import react, {useState} from 'react';
 import Layout from '../components/layout';
 
-import {signIn, signOut, useSession, getSession} from 'next-auth/client'
+import {signIn, signOut, useSession, getSession} from 'next-auth/react'
 
 import * as _ from  'lodash'
 

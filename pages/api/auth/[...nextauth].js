@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 
-import Providers from 'next-auth/providers'
+import CredentialsProvider from "next-auth/providers/credentials"
 
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import { initializeApollo } from '../../../lib/apolloClient'
@@ -16,7 +16,7 @@ const options = {
     //     // ...add more providers here
     // ],
     providers: [
-        Providers.Credentials({
+        CredentialsProvider({
             // The name to display on the sign in form (e.g. 'Sign in with...')
             name: 'Credentials',
             // The credentials is used to generate a suitable form on the sign in page.

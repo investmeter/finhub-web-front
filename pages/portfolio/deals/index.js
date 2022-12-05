@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import React, {useEffect, useState} from 'react'
-import {useSession} from 'next-auth/client'
+import {useSession} from 'next-auth/react'
 import {gql, useQuery} from '@apollo/client';
 import * as _ from 'lodash'
 import Layout from "../../../components/layout";

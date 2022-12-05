@@ -1,5 +1,5 @@
 import React from 'react'
-import { csrfToken } from 'next-auth/client'
+import { getCsrfToken  } from 'next-auth/react'
 
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import react, {useState} from 'react';
@@ -13,7 +13,7 @@ export default function SignIn({ csrfToken }) {
         <Layout isProtected={false}  >
         <Container>
             <Row>&nbsp;</Row>
-            <h1>Sign-In or <Link href="/register"><a href='/register' style={{textDecoration:'underline'}}>register</a></Link></h1>
+            <h1>Sign-In or <Link href="/register">Register</Link></h1>
 
             <Form method='post' action='/api/auth/callback/credentials'>
             <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
@@ -37,6 +37,6 @@ export default function SignIn({ csrfToken }) {
 
 SignIn.getInitialProps = async (context) => {
     return {
-        csrfToken: await csrfToken(context)
+        csrfToken: await getCsrfToken (context)
     }
 }

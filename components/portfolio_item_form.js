@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 
 import React, {useEffect, useState} from 'react';
 
-import {useSession} from 'next-auth/client'
+import {useSession} from 'next-auth/react'
 import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
 
 import DatePicker from "react-datepicker";
