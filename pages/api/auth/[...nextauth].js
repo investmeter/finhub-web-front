@@ -48,16 +48,18 @@ const options = {
         signIn: '/auth/credentials-signin',
     },
     callbacks: {
-        session: async ({ session, user, token }) => {
+        session: async ({ session, token }) => {
             session.user = {}
             session.user.uuid = token.user_uuid
             session.user.apiToken = token.apiToken
+            session.user.email = token.email
             return Promise.resolve(session)
         },
         jwt: async ({ token, user, account, profile, isNewUser }) => {
             if (user) {
-                token.user_uuid = user.user_uuid || {}
-                token.apiToken = user.token || {}
+                token.user_uuid = user.user_uuid || ""
+                token.apiToken = user.token || ""
+                token.email = user.email || ""
             }
             if (token && !user) {
                 // refresh token from gateway
