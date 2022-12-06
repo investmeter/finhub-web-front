@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import {Nav, Navbar, NavDropdown, Button, Container, Row, Col} from "react-bootstrap";
-import {signIn, signOut} from 'next-auth/react'
+import {useSession, signIn, signOut} from 'next-auth/react'
 
 
 import { useRouter } from 'next/router'
@@ -12,6 +12,7 @@ export default function Layout({isProtected = false, children = {}, userEmail=""
     const noBulletsList= {listStyleType: "none"};
 
     // const [session, loading] = useSession();
+    const {data:session} = useSession()
     const router = useRouter();
 
     const signOutRedirect = () => {

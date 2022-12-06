@@ -9,11 +9,11 @@ import { useApollo } from '../lib/apolloClient';
 
 import { SessionProvider  } from 'next-auth/react';
 
-const Main =  ({ Component, pageProps }) => {
+const Main =  ({ Component, pageProps: {session, ...pageProps },}) => {
     const apolloClient = useApollo(pageProps.initialApolloState)
 
   return (
-      <SessionProvider session={pageProps.session} >
+      <SessionProvider session={session} >
           <ApolloProvider client={apolloClient}>
               <Component {...pageProps} />
           </ApolloProvider>
