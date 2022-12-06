@@ -1,7 +1,6 @@
 import Head from 'next/head'
 // import styles from '../styles/Home.module.css'
 import {Navbar, Nav, NavDropdown} from "react-bootstrap";
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import Toast from 'react-bootstrap/Toast';
 import {Container, Row, Col} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -15,7 +14,8 @@ import * as _ from  'lodash'
 
 export default function Profile({isSession, userEmail}) {
 
-    const [session, loading] =  useSession()
+    const {data:session, status} =  useSession()
+    const loading = status === "loading"
 
 
     if (loading){
@@ -39,10 +39,6 @@ export default function Profile({isSession, userEmail}) {
 
             </Layout>
         )
-
-    // //const [session, loading] = useSession();
-    // console.log(session);
-
 
 }
 
