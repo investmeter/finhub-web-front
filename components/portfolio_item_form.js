@@ -144,7 +144,7 @@ function AlertFormError({show, setShow}) {
 
 function PortfolioItemForm({assets, setFormState}) {
 
-    const {control, handleSubmit, watch, errors, formState, register, unregister, setValue, getValues} = useForm(
+    const {control, handleSubmit, watch,  formState:{errors}, formState, register, unregister, setValue, getValues} = useForm(
         {
             mode: "onChange",
             resolver: yupResolver(schema),
@@ -152,7 +152,8 @@ function PortfolioItemForm({assets, setFormState}) {
         }
     );
 
-    const [session, loading] = useSession();
+    const {data:session, status} = useSession();
+    const loading = status === "loading"
     const [formLoading, setFormLoading] = useState(false)
     const [currency, setCurrency] = useState()
 

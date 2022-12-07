@@ -1,7 +1,8 @@
-import {Button, Col, Container, Modal, Row, Table} from 'react-bootstrap';
+import { Col, Container, Modal, Row, Table} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import Layout from '../../components/layout';
-import useSession from 'next-auth/react'
-import React, {useState, useEffect} from "react";
+import {useSession} from 'next-auth/react'
+import {useState, useEffect} from "react";
 import PortfolioItemForm from "../../components/portfolio_item_form"
 import * as _ from "lodash";
 import {initializeApollo} from "../../lib/apolloClient";
@@ -123,9 +124,8 @@ export default function PortfolioHome() {
 
 
     return (
-        <Layout session={session}>
-
-            <Button onClick={handleShow}>Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
+        <Layout session={session} isProtected={true}>
+            <Button onClick={handleShow} type="button">Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
 
             {session &&
                 <PortFolio session={session} doUpdate={doUpdate} setDoUpdate={setDoUpdate}/>
