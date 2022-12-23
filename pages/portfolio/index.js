@@ -124,7 +124,7 @@ export default function PortfolioHome() {
 
 
     return (
-        <Layout session={session} isProtected={true} isSession={!!session && session.user.apiToken} >
+        <Layout session={session} isProtected={true} isSession={!!session && session.user.apiToken} userEmail={_.get(session,'user.email')} >
             <Button onClick={handleShow} type="button">Add Deal</Button> &nbsp; <Link  href="/portfolio/deals/">Show All Deals</Link>
 
             {session &&
