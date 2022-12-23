@@ -110,19 +110,15 @@ const RBTDatePicker = (props) => {
     const { isValid, isInvalid } = props
     const { register, unregister, setValue, name } = props
 
-    useEffect(() => {
-        register({ name });
-        return () => unregister(name);
-    }, [name, register, unregister]);
-
-    setValue('dateAdded', startDate, { shouldValidate: true })
+    // setValue('dateAdded', startDate, { shouldValidate: true })
 
     return (
         <DatePicker isValid={isValid} isInvalid={isInvalid} selected={startDate} onChange={date => {
             setStartDate(date)
             setValue('dateAdded', date, { shouldDirty: true, shouldValidate: true })
         }}
-            className={`form-control ${isValid ? "is-valid" : ""} ${isInvalid ? "is-invalid" : ""}`} />
+            className={`form-control ${isValid ? "is-valid" : ""} ${isInvalid ? "is-invalid" : ""}`}
+        />
     )
 }
 
@@ -251,7 +247,7 @@ export default function PortfolioItemForm({ assets, setFormState }) {
                     control={control}
                     name='securityId'
                     defaultValue={0}
-                    render={  ({ field }) => 
+                    render={({ field }) =>
 
                         <SecuritiesSearchTypeHead {...field}
                             id='asset-id'
@@ -263,25 +259,32 @@ export default function PortfolioItemForm({ assets, setFormState }) {
                     }
                 />
             </Form.Group>
-            {/**
-                    <Form.Group controlId="dateAdded">
-                        <Form.Label>Date of deal</Form.Label>
-                        <Form.Row>
-                            <Col xs="auto">
-                                {/* <RBTDatePicker name='dateAdded'
-                                               {...{register, unregister, setValue}}
+ 
+            <Form.Group controlId="dateAdded" className="mb-3">
+                <Form.Label>Date of deal</Form.Label>
+            
+                   <Col xs="auto">
+                      <Controller
+                            control={control}
+                            name='dateAdded'
+                            defaultValue={0}
+                            render={({ field }) =>
+                                <RBTDatePicker
+                                    {...field}
+                                    {...{ setValue }}
                                     //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
-                                               isInvalid={!!errors.dateAdded}
-                                /> 
-                            </Col>
-                            <Col xs="auto">
-                                <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
-                            </Col>
-
-                        </Form.Row>
-
-                    </Form.Group>
-                   
+                                    isInvalid={!!errors.dateAdded}
+                                />
+                            }
+                            /> 
+                     </Col>
+                    <Col xs="auto">
+                        <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
+                    </Col>
+                        
+  
+            </Form.Group>
+            {/**   
                     <Form.Group>
                         <Form.Label>Price</Form.Label>
                         <Form.Row>
