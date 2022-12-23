@@ -142,7 +142,7 @@ function AlertFormError({show, setShow}) {
 }
 
 
-function PortfolioItemForm({assets, setFormState}) {
+export default function PortfolioItemForm({assets, setFormState}) {
 
     const {control, handleSubmit, watch,  formState:{errors}, formState, register, unregister, setValue, getValues} = useForm(
         {
@@ -227,10 +227,8 @@ function PortfolioItemForm({assets, setFormState}) {
     }
 
 
-    return (
-
-            <Container>
-                <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/>
+    return (<Container>
+                {/* <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/> */}
 
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     {/*<Form.Group controlId="formAssetType">*/}
@@ -251,7 +249,7 @@ function PortfolioItemForm({assets, setFormState}) {
                     <Form.Group controlId="formAssetId">
                         <Form.Label>Instrument</Form.Label>
 
-                        <SecuritiesSearchTypeHead
+                        {/* <SecuritiesSearchTypeHead
                             id='asset-id'
                             name='securityId'
                             options={assets}
@@ -264,7 +262,7 @@ function PortfolioItemForm({assets, setFormState}) {
                             setCurrency={setCurrency}
                         >
 
-                        </SecuritiesSearchTypeHead>
+                        </SecuritiesSearchTypeHead> */}
 
                     </Form.Group>
 
@@ -272,11 +270,11 @@ function PortfolioItemForm({assets, setFormState}) {
                         <Form.Label>Date of deal</Form.Label>
                         <Form.Row>
                             <Col xs="auto">
-                                <RBTDatePicker name='dateAdded'
+                                {/* <RBTDatePicker name='dateAdded'
                                                {...{register, unregister, setValue}}
                                     //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
                                                isInvalid={!!errors.dateAdded}
-                                />
+                                /> */}
                             </Col>
                             <Col xs="auto">
                                 <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
@@ -406,4 +404,4 @@ function PortfolioItemForm({assets, setFormState}) {
 //
 // }
 
-export default PortfolioItemForm
+
