@@ -1,22 +1,27 @@
 // import styles from '../styles/Home.module.css'
-import {Col, Container, Form, Row, Alert} from 'react-bootstrap';
+
+
+
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
+import { Col, Container, Form, Row, Alert } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {useSession} from 'next-auth/react'
-import {Typeahead, withAsync} from 'react-bootstrap-typeahead';
+import { useSession } from 'next-auth/react'
+import { Typeahead, withAsync } from 'react-bootstrap-typeahead';
 
 import DatePicker from "react-datepicker";
 
-import {useForm} from "react-hook-form"
-import {yupResolver} from '@hookform/resolvers/yup'
+import { Controller, useForm } from "react-hook-form"
+import { yupResolver } from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
 
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
-import {initializeApollo} from '../lib/apolloClient'
+import { initializeApollo } from '../lib/apolloClient'
 import * as _ from 'lodash'
 
 
@@ -29,7 +34,7 @@ const schema = yup.object({
     securityId: yup.number().positive().required(),
     dateAdded: yup.date().required().max(tomorrow, "Date could not be in future"),
     price: yup.number().required().positive(),
-    amount: yup.number().max(Math.pow(2,50),"Number is too big"),
+    amount: yup.number().max(Math.pow(2, 50), "Number is too big"),
     totalPaid: yup.number(),
     brokerFee: yup.number()
 });
@@ -44,13 +49,7 @@ const SecuritiesSearchTypeHead = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(props.options);
 
-    const {register, unregister, setValue, setCurrency, name} = props
-
-    useEffect(() => {
-        register({name});
-        return () => unregister(name);
-    }, [name, register, unregister]);
-
+    const { register, unregister, setValue, setCurrency, name } = props
 
     const handleSearch = (query) => {
         setIsLoading(true);
@@ -80,25 +79,25 @@ const SecuritiesSearchTypeHead = (props) => {
 
     return (
         <AsyncTypeHead options={options}
-                       id='securityIdCntrl'
-                       onSearch={handleSearch}
-                       isLoading={isLoading}
-                       highlightOnlyResult={true}
-                       labelKey={option => `${option.ticker} ${option.company}`}
-                       placeholder="Type ticker or company name"
-                       clearButton
-                       defaultOpen={true}
-                       isValid={props.isValid}
-                       isInvalid={props.isInvalid}
-                       onChange={(selected) => {
-                           console.log('Selected', selected);
-                           if (selected.length > 0) {
-                               setValue(name, selected[0].value, {shouldValidate: true, shouldDirty: true})
-                               setCurrency(selected[0].currency)
-                           } else {
-                               setValue(name, undefined, {shouldValidate: true, shouldDirty: true})
-                           }
-                       }}
+            id='securityIdCntrl'
+            onSearch={handleSearch}
+            isLoading={isLoading}
+            highlightOnlyResult={true}
+            labelKey={option => `${option.ticker} ${option.company}`}
+            placeholder="Type ticker or company name"
+            clearButton
+            defaultOpen={true}
+            isValid={props.isValid}
+            isInvalid={props.isInvalid}
+            onChange={(selected) => {
+                console.log('Selected', selected);
+                if (selected.length > 0) {
+                    setValue(name, selected[0].value, { shouldValidate: true, shouldDirty: true })
+                    setCurrency(selected[0].currency)
+                } else {
+                    setValue(name, undefined, { shouldValidate: true, shouldDirty: true })
+                }
+            }}
 
         >
         </AsyncTypeHead>
@@ -108,27 +107,27 @@ const SecuritiesSearchTypeHead = (props) => {
 const RBTDatePicker = (props) => {
     const [startDate, setStartDate] = useState(new Date());
 
-    const {isValid, isInvalid} = props
-    const {register, unregister, setValue, name} = props
+    const { isValid, isInvalid } = props
+    const { register, unregister, setValue, name } = props
 
     useEffect(() => {
-        register({name});
+        register({ name });
         return () => unregister(name);
     }, [name, register, unregister]);
 
-    setValue('dateAdded', startDate, {shouldValidate: true})
+    setValue('dateAdded', startDate, { shouldValidate: true })
 
     return (
         <DatePicker isValid={isValid} isInvalid={isInvalid} selected={startDate} onChange={date => {
             setStartDate(date)
-            setValue('dateAdded', date, {shouldDirty: true, shouldValidate: true})
+            setValue('dateAdded', date, { shouldDirty: true, shouldValidate: true })
         }}
-                    className={`form-control ${isValid ? "is-valid" : ""} ${isInvalid ? "is-invalid" : ""}`}/>
+            className={`form-control ${isValid ? "is-valid" : ""} ${isInvalid ? "is-invalid" : ""}`} />
     )
 }
 
-function AlertFormError({show, setShow}) {
-//    const [show, setShow] = useState(show);
+function AlertFormError({ show, setShow }) {
+    //    const [show, setShow] = useState(show);
 
     if (show) {
         return (
@@ -142,9 +141,9 @@ function AlertFormError({show, setShow}) {
 }
 
 
-export default function PortfolioItemForm({assets, setFormState}) {
+export default function PortfolioItemForm({ assets, setFormState }) {
 
-    const {control, handleSubmit, watch,  formState:{errors}, formState, register, unregister, setValue, getValues} = useForm(
+    const { control, handleSubmit, watch, formState: { errors }, formState, register, unregister, setValue, getValues } = useForm(
         {
             mode: "onChange",
             resolver: yupResolver(schema),
@@ -152,7 +151,7 @@ export default function PortfolioItemForm({assets, setFormState}) {
         }
     );
 
-    const {data:session, status} = useSession();
+    const { data: session, status } = useSession();
     const loading = status === "loading"
     const [formLoading, setFormLoading] = useState(false)
     const [currency, setCurrency] = useState()
@@ -165,10 +164,10 @@ export default function PortfolioItemForm({assets, setFormState}) {
 
     if (loading) {
         return (
-                <Container>
-                    <Row>&nbsp;</Row>
-                    <h1>Loading....</h1>
-                </Container>
+            <Container>
+                <Row>&nbsp;</Row>
+                <h1>Loading....</h1>
+            </Container>
         )
     }
 
@@ -216,56 +215,55 @@ export default function PortfolioItemForm({assets, setFormState}) {
                     setFormState('ADDED_OK')
                 }
             }
-            )
-            .catch( (e) => {
+        )
+            .catch((e) => {
                 console.log("FORM_ERROR")
                 console.log(e)
                 setErrorAlertShow(true)
-//                setFormState('ERROR_FORM_ADD_ITEM')
-            } )
+                //                setFormState('ERROR_FORM_ADD_ITEM')
+            })
 
     }
 
 
     return (<Container>
-                {/* <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/> */}
+        {/* <AlertFormError show={errorAlertShow} setShow={setErrorAlertShow}/> */}
 
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                    {/*<Form.Group controlId="formAssetType">*/}
-                    {/*    <Form.Label>Type of Instrument</Form.Label>*/}
-                    {/*    <Form.Control as='select' defaultValue='' name='securityType'*/}
-                    {/*                  isInvalid={!!errors.securityType}*/}
-                    {/*                  ref={register}*/}
-                    {/*                  onChange={(e) => setValue('securityType', e.target.value,*/}
-                    {/*                      {shouldValidate: true, shouldDirty: true})}*/}
-                    {/*    >*/}
-                    {/*        <option key='blankChoice' hidden value=''>Choose</option>*/}
-                    {/*        <option value='stock'>Stocks</option>*/}
-                    {/*        /!*<option>Bonds</option>*!/*/}
-                    {/*    </Form.Control>*/}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/*<Form.Group controlId="formAssetType">*/}
+            {/*    <Form.Label>Type of Instrument</Form.Label>*/}
+            {/*    <Form.Control as='select' defaultValue='' name='securityType'*/}
+            {/*                  isInvalid={!!errors.securityType}*/}
+            {/*                  ref={register}*/}
+            {/*                  onChange={(e) => setValue('securityType', e.target.value,*/}
+            {/*                      {shouldValidate: true, shouldDirty: true})}*/}
+            {/*    >*/}
+            {/*        <option key='blankChoice' hidden value=''>Choose</option>*/}
+            {/*        <option value='stock'>Stocks</option>*/}
+            {/*        /!*<option>Bonds</option>*!/*/}
+            {/*    </Form.Control>*/}
 
-                    {/*</Form.Group>*/}
+            {/*</Form.Group>*/}
 
-                    <Form.Group controlId="formAssetId">
-                        <Form.Label>Instrument</Form.Label>
+            <Form.Group controlId="formAssetId" className="mb-3" >
+                <Form.Label>Instrument</Form.Label>
+                <Controller
+                    control={control}
+                    name='securityId'
+                    defaultValue={0}
+                    render={  ({ field }) => 
 
-                        {/* <SecuritiesSearchTypeHead
+                        <SecuritiesSearchTypeHead {...field}
                             id='asset-id'
-                            name='securityId'
                             options={assets}
-                            defaultValue={0}
-                            //isValid={formState.dirtyFields.securityId && !errors.securityId}
                             isInvalid={!!errors.securityId}
                             setValue={setValue}
-                            register={register}
-                            unregister={unregister}
                             setCurrency={setCurrency}
-                        >
-
-                        </SecuritiesSearchTypeHead> */}
-
-                    </Form.Group>
-
+                        />
+                    }
+                />
+            </Form.Group>
+            {/**
                     <Form.Group controlId="dateAdded">
                         <Form.Label>Date of deal</Form.Label>
                         <Form.Row>
@@ -274,7 +272,7 @@ export default function PortfolioItemForm({assets, setFormState}) {
                                                {...{register, unregister, setValue}}
                                     //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
                                                isInvalid={!!errors.dateAdded}
-                                /> */}
+                                /> 
                             </Col>
                             <Col xs="auto">
                                 <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
@@ -283,7 +281,7 @@ export default function PortfolioItemForm({assets, setFormState}) {
                         </Form.Row>
 
                     </Form.Group>
-
+                   
                     <Form.Group>
                         <Form.Label>Price</Form.Label>
                         <Form.Row>
@@ -363,13 +361,14 @@ export default function PortfolioItemForm({assets, setFormState}) {
                             <Form.Label column>{currency}</Form.Label>
                         </Form.Row>
                     </Form.Group>
+                    
+                    */}
+            <Button variant="primary" type="submit" disabled={formState.isSubmitting}>Add to Portfolio</Button>
+            {formLoading && <p>Loading</p>}
 
-                    <Button variant="primary" type="submit" disabled={formState.isSubmitting}>Add to Portfolio</Button>
-                    {formLoading && <p>Loading</p>}
+        </Form>
 
-                </Form>
-
-            </Container>
+    </Container>
 
     )
 }
