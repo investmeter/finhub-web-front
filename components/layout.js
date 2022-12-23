@@ -74,7 +74,7 @@ export default function Layout({isProtected = false, children = {}, userEmail=""
                 <Container>
                     <Row>&nbsp;</Row>
                     <h1>Session Expired</h1>
-                    <h2>Please <Link onClick={signIn} href="/auth/credentials-signin"><a href="/auth/credentials-signin">sign-in</a></Link></h2>
+                    <h2>Please <Link onClick={signIn} href="/auth/credentials-signin">sign-in</Link></h2>
 
                 </Container>
             }
