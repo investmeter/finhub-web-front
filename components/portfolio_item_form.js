@@ -259,116 +259,122 @@ export default function PortfolioItemForm({ assets, setFormState }) {
                     }
                 />
             </Form.Group>
- 
+
             <Form.Group controlId="dateAdded" className="mb-3">
                 <Form.Label>Date of deal</Form.Label>
-            
-                   <Col xs="auto">
-                      <Controller
-                            control={control}
-                            name='dateAdded'
-                            defaultValue={0}
-                            render={({ field }) =>
-                                <RBTDatePicker
-                                    {...field}
-                                    {...{ setValue }}
-                                    //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
-                                    isInvalid={!!errors.dateAdded}
-                                />
-                            }
-                            /> 
-                     </Col>
-                    <Col xs="auto">
-                        <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
-                    </Col>
-                        
-  
+
+                <Col xs="auto">
+                    <Controller
+                        control={control}
+                        name='dateAdded'
+                        defaultValue={0}
+                        render={({ field }) =>
+                            <RBTDatePicker
+                                {...field}
+                                {...{ setValue }}
+                                //isValid={formState.dirtyFields.dateAdded && !errors.dateAdded}
+                                isInvalid={!!errors.dateAdded}
+                            />
+                        }
+                    />
+                </Col>
+                <Col xs="auto">
+                    <Form.Text>{!!errors.dateAdded && <span>Date should not be in future</span>}</Form.Text>
+                </Col>
+
+
             </Form.Group>
-            {/**   
-                    <Form.Group>
-                        <Form.Label>Price</Form.Label>
-                        <Form.Row>
-                            <Col>
-                                <Form.Control name="price"
-                                              placeholder="Average price of acquired securities"
-                                              ref={register}
-                                    //isValid={formState.dirtyFields.price && !errors.price}
-                                              isInvalid={!!errors.price}
-                                              onChange={
-                                                  (e) => {
-                                                      setValue('totalPaid', getValues('amount') * e.target.value, {shouldValidate: true})
-                                                  }
-                                              }
-                                              autoComplete="off"
 
-                                />
-                            </Col>
+            <Form.Group className="mb-3">
+                <Form.Label>Price</Form.Label>
+                <Col>
+                    <Controller
+                        name="price"
+                        control={control}
+                        render={({ field }) =>
+                            <Form.Control
+                                {...field}
+                                placeholder="Average price of acquired securities"
+                                defaultValue={0}
+                                //isValid={formState.dirtyFields.price && !errors.price}
+                                isInvalid={!!errors.price}
+                                onChange={
+                                    (e) => {
+                                        setValue('totalPaid', getValues('amount') * e.target.value, { shouldValidate: true })
+                                    }
+                                }
+                                autoComplete="off"
+                            />
+                        }
+                    />
 
-                            <Form.Label column>{currency}</Form.Label>
-                        </Form.Row>
-                    </Form.Group>
+                </Col>
 
-                    <Form.Group>
-                        <Form.Label>Amount</Form.Label>
+                <Form.Label column>{currency}</Form.Label>
+            </Form.Group>
 
-                        <Form.Row>
+            <Form.Group className="mb-3">
+                <Form.Label>Amount</Form.Label>
+                <Col>
+                    <Controller
+                        name="amount"
+                        control={control}
+                        render={({ field }) =>
+                            <Form.Control placeholder='Number of securities'
+                                {...field}
+                                //isValid={formState.dirtyFields.amount && !errors.amount}
+                                isInvalid={!!errors.amount}
+                                onChange={
+                                    (e) => {
+                                        setValue('totalPaid', getValues('price') * e.target.value, { shouldValidate: true })
+                                    }
+                                }
+                                autoComplete="off"
+                            />
+                        }
+                    />
+                </Col>
+                <Form.Label column>psc.</Form.Label>
+            </Form.Group>
 
-                            <Col>
-                                <Form.Control placeholder='Number of securities'
-                                              name="amount"
-                                              ref={register}
-                                    //isValid={formState.dirtyFields.amount && !errors.amount}
-                                              isInvalid={!!errors.amount}
-                                              onChange={
-                                                  (e) => {
-                                                      setValue('totalPaid', getValues('price') * e.target.value, {shouldValidate: true})
-                                                  }
-                                              }
-                                              autoComplete="off"
+            <Form.Group className="mb-3">
+                <Form.Label>Total deal Amount</Form.Label>
 
-                                />
-                            </Col>
-                            <Form.Label column>psc.</Form.Label>
-
-                        </Form.Row>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Total deal Amount</Form.Label>
-                        <Form.Row>
-                            <Col>
-                                <Form.Control placeholder="Total paid for securities"
-                                              name="totalPaid"
-                                              ref={register}
-                                    //isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
-                                              isInvalid={!!errors.totalPaid}
-                                              autoComplete="off"
-                                />
-                            </Col>
-                            <Form.Label column>{currency}</Form.Label>
-                        </Form.Row>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Broker Fee</Form.Label>
-                        <Form.Row>
-                            <Col>
-                                <Form.Control placeholder="fee"
-                                              name="brokerFee"
-                                              defaultValue={0}
-                                              ref={register}
-                                    //isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
-                                              isInvalid={!!errors.brokerFee}
-                                />
-                            </Col>
-                            <Form.Label column>{currency}</Form.Label>
-                        </Form.Row>
-                    </Form.Group>
-                    
-                    */}
+                <Col>
+                    <Controller
+                        name="totalPaid"
+                        control={control}
+                        render={({ field }) =>
+                            <Form.Control
+                                {...field}
+                                placeholder="Total paid for securities"
+                                //isValid={formState.dirtyFields.totalPaid && !errors.totalPaid}
+                                isInvalid={!!errors.totalPaid}
+                                autoComplete="off"
+                            />}
+                    />
+                </Col>
+                <Form.Label column>{currency}</Form.Label>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Broker Fee</Form.Label>
+                <Col>
+                    <Controller
+                        name="brokerFee"
+                        control={control}
+                        render={({ field }) =>
+                            <Form.Control placeholder="fee"
+                                defaultValue={0}
+                                //isValid={formState.dirtyFields.brokerFee && !errors.brokerFee}
+                                isInvalid={!!errors.brokerFee}
+                            />
+                        }
+                    />
+                </Col>
+                <Form.Label column>{currency}</Form.Label>
+            </Form.Group>
             <Button variant="primary" type="submit" disabled={formState.isSubmitting}>Add to Portfolio</Button>
             {formLoading && <p>Loading</p>}
-
         </Form>
 
     </Container>
