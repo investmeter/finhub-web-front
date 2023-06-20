@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import React, {useEffect, useState} from 'react'
-import {useSession} from 'next-auth/client'
+import {useSession} from 'next-auth/react'
 import {gql, useQuery} from '@apollo/client';
 import * as _ from 'lodash'
 import Layout from "../../../components/layout";
@@ -50,7 +50,8 @@ function DealList({userUuid, asset, setAssetTitle}) {
     }
 
 
-    const [session, loading] = useSession()
+    const {data:session, status} = useSession()
+    const loading = status ==="loading" 
 
     const [show, setShow] = useState(false);
 
@@ -171,7 +172,7 @@ function DealList({userUuid, asset, setAssetTitle}) {
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <Button variant="primary" variant="danger" onClick={() => {deleteDealGql(dealId)}}>
+                        <Button variant="danger" onClick={() => {deleteDealGql(dealId)}}>
                             Delete
                         </Button>
                     </Modal.Footer>
@@ -183,7 +184,7 @@ function DealList({userUuid, asset, setAssetTitle}) {
                     <Modal.Body> Please wait.. </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" disabled >Cancel</Button>
-                        <Button variant="primary" disabled variant="danger" >Delete</Button>
+                        <Button  disabled variant="danger" >Delete</Button>
                     </Modal.Footer>
                 </>
                 }

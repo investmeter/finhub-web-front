@@ -1,15 +1,13 @@
 import Head from 'next/head'
 // import styles from '../styles/Home.module.css'
 import {Navbar, Nav, NavDropdown, Form, Modal} from "react-bootstrap";
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Toast from 'react-bootstrap/Toast';
 import {Container, Row, Col} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 import react, {useEffect, useState} from 'react';
 import Layout from '../components/layout';
 
-import {signIn, signOut, useSession} from 'next-auth/client'
+import {signIn, signOut, useSession} from 'next-auth/react'
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -70,9 +68,9 @@ export default function Register() {
     const [registrationFormState,setRegistrationFormState ]=useState();
     const [showErrorWindow, setShowErrorWindow] = useState(true);
 
-    const [session, loading] = useSession();
+    const {data:session} = useSession();
 
-    const { control, handleSubmit, watch, errors, formState } = useForm({
+    const { control, handleSubmit, formState:{errors}, formState } = useForm({
         mode:"onChange",
         resolver: yupResolver(schema)
     });
@@ -123,8 +121,6 @@ export default function Register() {
             setRegistrationFormState("ERROR")})
     }
 
-    console.log(session);
-
     return (
         <Layout>
             <Container>
@@ -136,65 +132,78 @@ export default function Register() {
                     <ErrorWindow toShow={showErrorWindow} onHide={()=>{setShowErrorWindow(false); console.log("Hide")}}/>
                 }
                 {!session && registrationFormState!=='OK' &&
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Form.Group>
+                    <Form onSubmit={handleSubmit(onSubmit)} >
+                        <Form.Group className="mb-3" controlId="userEmail">
                             <Form.Label>Email</Form.Label>
-                            <Controller as={Form.Control}
-                                        placeholder="Email"
-                                        name="userEmail"
-                                        control={control}
-                                        defaultValue=""
-                                        isValid={formState.dirtyFields.userEmail && !errors.userEmail}
-                                        isInvalid={errors.userEmail}
-                                        cntx={formState}
-                            />
-                            <Form.Text className="text-muted">
+                            <Controller
+                                control={control}
+                                name="userEmail" 
+                                render={({field}) => <Form.Control 
+                                {...field}
+                                placeholder="Email"
+                                defaultValue=""
+                                isValid={(formState.dirtyFields.userEmail && !!errors &&  !errors.email) }
+                                isInvalid={!!errors && errors.userEmail}
+                                />}
+                             />
+                            
+                            <Form.Text >
                                 Unique username to identify yourself
                             </Form.Text>
                             <Form.Control.Feedback type="invalid">
-                                {errors.userName && <span>Please provide correct email</span>}
+                                { !!errors && errors.userEmail && <span>Please provide correct email</span>}
                             </Form.Control.Feedback>
-
                         </Form.Group>
-
-                        <Form.Group controlId="registerPassword">
+                        <Form.Group controlId="registerPassword" className="mb-3" >
                             <Form.Label>Password</Form.Label>
 
-                            <Controller as={Form.Control}
-                                        type="password"
-                                        placeholder="Password"
+                            <Controller 
                                         name="password"
                                         control={control}
-                                        defaultValue=""
-                                        isValid={formState.dirtyFields.password && !errors.password}
-                                        isInvalid={errors.password}
+                                        render = { 
+                                            ({field})=> (
+                                                <Form.Control 
+                                                {...field}
+                                                type="password"
+                                                placeholder="Password"
+                                                isValid={formState.dirtyFields.password && !!errors &&  !errors.password}
+                                                isInvalid={!!errors && errors.password}
+                                                />
+                                            )
+                                        }
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.password && <span>Please set password.</span>}
+                                {!!errors && errors.password && <span>Please set password.</span>}
                             </Form.Control.Feedback>
 
                         </Form.Group>
 
-                        <Form.Group controlId="registerRepeatPassword">
+                        <Form.Group controlId="registerRepeatPassword" className="mb-3" >
                             <Form.Label>Repeat Password</Form.Label>
-                            <Controller as={Form.Control}
-                                        placeholder="Password"
+                            <Controller
                                         name="repeatPassword"
-                                        type="password"
                                         control={control}
-                                        defaultValue=""
-                                        isValid={formState.dirtyFields.repeatPassword && !errors.repeatPassword}
-                                        isInvalid={errors.repeatPassword}
+                                        render = { ({field}) => (
+                                            <Form.Control    
+                                                {...field}
+                                                placeholder="Password"
+                                                type="password"
+                                                defaultValue=""
+                                                isValid={formState.dirtyFields.repeatPassword && !!errors && !errors.repeatPassword}
+                                                isInvalid={!!errors && errors.repeatPassword}
+                                            />
+                                            )
+                                        }
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.repeatPassword && <span>Should mathc the password</span>}
+                                {!!errors && errors.repeatPassword && <span>Should match the password</span>}
                             </Form.Control.Feedback>
 
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
+                        <Form.Group>
+                            <Button variant="primary" type="submit">Submit</Button>
+                        </Form.Group>                
                     </Form>
                 }
             </Container>
